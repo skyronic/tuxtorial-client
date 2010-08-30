@@ -3,12 +3,14 @@
 #include <QSystemTrayIcon>
 #include <QList>
 #include <QIcon>
-
+#include <QTimer>
+#include <QTextStream>
 EditorWindow::EditorWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::EditorWindow)
 {
     ui->setupUi(this);
+    screenshotTimer = new QTimer();
 
     systray = new QSystemTrayIcon();
     systray->setIcon (QIcon(":/icons/helpicon.png"));
@@ -25,7 +27,9 @@ EditorWindow::EditorWindow(QWidget *parent) :
     // Connect the actions to corresponding signals
     connect(ui->actionStart, SIGNAL(triggered()), this, SLOT(StartCapture()));
     connect(systray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(ShowWindow(QSystemTrayIcon::ActivationReason)));
-
+    connect(ui->actionCapture_Screenshot, SIGNAL(triggered()), this, SLOT(StartScreenshotCountdown()));
+    connect(systray, SIGNAL(messageClicked()), this, SLOT(CancelScreenshotCountdown()));
+    connect(screenshotTimer, SIGNAL(timeout()), this, SLOT(ScreenshotTick()));
 }
 
 EditorWindow::~EditorWindow()
@@ -44,4 +48,31 @@ void EditorWindow::ShowWindow (QSystemTrayIcon::ActivationReason reason)
     {
         this->show ();
     }
+}
+
+void EditorWindow::ScreenshotTick ()
+{
+    if(screenshotTimeRemaining == 0)
+    {
+        // Take the screenshot
+        screenshotTimer->stop();
+    }
+    else
+    {
+        QString message;
+        QTextStream(&message) << "in " << screenshotTimeRemaining << " seconds";
+        systray->showMessage ("Will take a screenshot", message, QSystemTrayIcon::Information, screenshotTimeRemaining * 1000 - 200);
+        screenshotTimeRemaining --;
+    }
+}
+
+void EditorWindow::StartScreenshotCountdown ()
+{
+    screenshotTimeRemaining = 5;
+    screenshotTimer->start (1000);
+}
+
+void EditorWindow::CancelScreenshotCountdown()
+{
+    screenshotTimer->stop ();
 }
