@@ -17,10 +17,16 @@ public:
 
 private:
     Ui::TextDialog *ui;
+    void closeEvent (QCloseEvent *);
 
 private slots:
     void on_pasteButton_clicked();
     void on_openFileButton_clicked();
+
+signals:
+    void StepFinishSuccess();
+    void StepFinishFail();
+    void StepFinishNoRelease();
 };
 
 #endif // TEXTDIALOG_H

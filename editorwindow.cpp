@@ -6,6 +6,8 @@
 #include <QTimer>
 #include <QTextStream>
 #include "terminaldialog.h"
+#include "textdialog.h"
+#include "keybindingthread.h"
 
 EditorWindow::EditorWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -14,6 +16,12 @@ EditorWindow::EditorWindow(QWidget *parent) :
 
     terminalDialog = new TerminalDialog;
     terminalDialog->hide ();
+
+    textDialog = new TextDialog;
+    textDialog->hide ();
+
+    keybindingThread = new KeybindingThread;
+    keybindingThread->start ();
 
     ui->setupUi(this);
     screenshotTimer = new QTimer();
@@ -33,12 +41,26 @@ EditorWindow::EditorWindow(QWidget *parent) :
     // Connect the actions to corresponding signals
     connect(ui->actionStart, SIGNAL(triggered()), this, SLOT(StartCapture()));
     connect(systray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(ShowWindow(QSystemTrayIcon::ActivationReason)));
+
+    // Keybinding signals
+    connect(keybindingThread, SIGNAL(KeybindingActivated(int)), this, SLOT(KeybindingActivated(int)));
+
+    // Screenshot signals
     connect(ui->actionCapture_Screenshot, SIGNAL(triggered()), this, SLOT(StartScreenshotCountdown()));
     connect(systray, SIGNAL(messageClicked()), this, SLOT(CancelScreenshotCountdown()));
     connect(screenshotTimer, SIGNAL(timeout()), this, SLOT(ScreenshotTick()));
 
     // terminal widget signals
     connect(ui->actionCapture_Commands, SIGNAL(triggered()), this, SLOT(ShowTerminalDialog()));
+    connect(terminalDialog, SIGNAL(StepFinishSuccess()), this, SLOT(StepFinishSuccess()));
+    connect(terminalDialog, SIGNAL(StepFinishFail()), this, SLOT(StepFinishFail()));
+    connect(terminalDialog, SIGNAL(StepFinishNoRelease()), this, SLOT(StepFinishNoRelease()));
+
+    // text widget signals
+    connect(ui->actionCapture_Text, SIGNAL(triggered()), this, SLOT(ShowTextDialog()));
+    connect(textDialog, SIGNAL(StepFinishSuccess()), this, SLOT(StepFinishSuccess()));
+    connect(textDialog, SIGNAL(StepFinishFail()), this, SLOT(StepFinishFail()));
+    connect(textDialog, SIGNAL(StepFinishNoRelease()), this, SLOT(StepFinishNoRelease()));
 }
 
 EditorWindow::~EditorWindow()
@@ -77,8 +99,11 @@ void EditorWindow::ScreenshotTick ()
 
 void EditorWindow::StartScreenshotCountdown ()
 {
-    screenshotTimeRemaining = 5;
-    screenshotTimer->start (1000);
+    if(!stepActive)
+    {
+        screenshotTimeRemaining = 5;
+        screenshotTimer->start (1000);
+    }
 }
 
 void EditorWindow::CancelScreenshotCountdown()
@@ -88,6 +113,54 @@ void EditorWindow::CancelScreenshotCountdown()
 
 void EditorWindow::ShowTerminalDialog ()
 {
-    terminalDialog->show ();
-
+    if(!stepActive)
+    {
+        stepActive = true;
+        terminalDialog->show ();
+    }
 }
+
+void EditorWindow::ShowTextDialog ()
+{
+    if(!stepActive)
+    {
+        stepActive = true;
+        textDialog->show ();
+    }
+}
+
+void EditorWindow::StepFinishSuccess ()
+{
+    stepActive = false;
+}
+
+void EditorWindow::StepFinishFail ()
+{
+    stepActive = false;
+}
+
+void EditorWindow::StepFinishNoRelease ()
+{
+    stepActive = false;
+}
+
+
+void EditorWindow::KeybindingActivated (int type)
+{
+    switch(type)
+    {
+        case KeybindingThread::ConsoleStep:
+            ShowTerminalDialog ();
+            break;
+
+        case KeybindingThread::TextStep:
+            ShowTextDialog ();
+            break;
+
+        case KeybindingThread::ScreenshotStep:
+            StartScreenshotCountdown ();
+            break;
+    }
+}
+
+

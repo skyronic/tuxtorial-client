@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QDebug>
+#include <QCloseEvent>
 
 TextDialog::TextDialog(QWidget *parent) :
     QDialog(parent),
@@ -49,4 +50,15 @@ void TextDialog::on_pasteButton_clicked()
         targetString = selectString;
 
     ui->textEdit->setText (targetString);
+}
+
+void TextDialog::closeEvent (QCloseEvent *ev)
+{
+    ev->ignore ();
+    this->hide ();
+
+    // closing the window is a failed step
+    emit StepFinishFail ();
+
+    qDebug() << "User tried to close the dialog";
 }

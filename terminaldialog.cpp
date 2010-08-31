@@ -23,3 +23,17 @@ TerminalDialog::~TerminalDialog()
 {
     delete ui;
 }
+
+void TerminalDialog::on_TerminalDialog_destroyed()
+{
+    qDebug () << "Terminal dialog has been destroyed. this isn't right :(";
+}
+
+void TerminalDialog::closeEvent (QCloseEvent *ev)
+{
+    // ignore the close event
+    ev->ignore ();
+    this->hide ();
+
+    emit StepFinishFail ();
+}

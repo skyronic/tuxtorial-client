@@ -17,12 +17,14 @@ CONFIG(debug, debug|release) {
 SOURCES += main.cpp\
     editorwindow.cpp \
     terminaldialog.cpp \
-    textdialog.cpp
+    textdialog.cpp \
+    keybindingthread.cpp
 
 HEADERS  += \
     editorwindow.h \
     terminaldialog.h \
-    textdialog.h
+    textdialog.h \
+    keybindingthread.h
 
 FORMS    += \
     editorwindow.ui \

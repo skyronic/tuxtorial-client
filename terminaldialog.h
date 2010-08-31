@@ -19,6 +19,16 @@ public:
 private:
     Ui::TerminalDialog *ui;
     QTermWidget *termWidget;
+    void closeEvent (QCloseEvent *ev);
+
+signals:
+    void StepFinishSuccess();
+    void StepFinishFail();
+    void StepFinishNoRelease();
+
+
+private slots:
+    void on_TerminalDialog_destroyed();
 };
 
 #endif // TERMINALDIALOG_H
