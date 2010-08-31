@@ -5,10 +5,16 @@
 #include <QIcon>
 #include <QTimer>
 #include <QTextStream>
+#include "terminaldialog.h"
+
 EditorWindow::EditorWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::EditorWindow)
 {
+
+    terminalDialog = new TerminalDialog;
+    terminalDialog->hide ();
+
     ui->setupUi(this);
     screenshotTimer = new QTimer();
 
@@ -30,6 +36,9 @@ EditorWindow::EditorWindow(QWidget *parent) :
     connect(ui->actionCapture_Screenshot, SIGNAL(triggered()), this, SLOT(StartScreenshotCountdown()));
     connect(systray, SIGNAL(messageClicked()), this, SLOT(CancelScreenshotCountdown()));
     connect(screenshotTimer, SIGNAL(timeout()), this, SLOT(ScreenshotTick()));
+
+    // terminal widget signals
+    connect(ui->actionCapture_Commands, SIGNAL(triggered()), this, SLOT(ShowTerminalDialog()));
 }
 
 EditorWindow::~EditorWindow()
@@ -75,4 +84,10 @@ void EditorWindow::StartScreenshotCountdown ()
 void EditorWindow::CancelScreenshotCountdown()
 {
     screenshotTimer->stop ();
+}
+
+void EditorWindow::ShowTerminalDialog ()
+{
+    terminalDialog->show ();
+
 }

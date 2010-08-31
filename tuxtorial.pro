@@ -9,15 +9,27 @@ QT       += core gui
 TARGET = tuxtorial
 TEMPLATE = app
 
+CONFIG(debug, debug|release) {
+    LIBS 	+= -L.. libqtermwidget_d.a
+} else {
+    LIBS 	+= -L.. libqtermwidget.a
+}
 
 SOURCES += main.cpp\
-    editorwindow.cpp
+    editorwindow.cpp \
+    terminaldialog.cpp
 
 HEADERS  += \
-    editorwindow.h
+    editorwindow.h \
+    terminaldialog.h
 
 FORMS    += \
-    editorwindow.ui
+    editorwindow.ui \
+    terminaldialog.ui
 
 RESOURCES += \
     icons.qrc
+
+INCLUDEPATH += lib
+
+OTHER_FILES +=

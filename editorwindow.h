@@ -9,6 +9,7 @@ namespace Ui {
 }
 
 class QTimer;
+class TerminalDialog;
 
 class EditorWindow : public QMainWindow
 {
@@ -25,6 +26,7 @@ private:
     QSystemTrayIcon *systray;
     int screenshotTimeRemaining;
     QTimer *screenshotTimer;
+    TerminalDialog *terminalDialog;
 
 
 public slots:
@@ -33,6 +35,9 @@ public slots:
     void StartScreenshotCountdown();
     void ScreenshotTick();
     void CancelScreenshotCountdown();
+
+    // Terminal slots
+    void ShowTerminalDialog();
 };
 
 #endif // EDITORWINDOW_H
