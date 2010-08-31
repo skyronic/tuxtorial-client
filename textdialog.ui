@@ -47,14 +47,14 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="pasteButton">
             <property name="text">
              <string>Paste</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_2">
+           <widget class="QPushButton" name="openFileButton">
             <property name="text">
              <string>Open File</string>
             </property>
@@ -175,7 +175,13 @@
          </layout>
         </item>
         <item>
-         <widget class="QTextEdit" name="textEdit"/>
+         <widget class="QTextEdit" name="textEdit">
+          <property name="font">
+           <font>
+            <family>Monospace</family>
+           </font>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>

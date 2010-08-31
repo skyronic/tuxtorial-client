@@ -17,6 +17,10 @@ public:
 
 private:
     Ui::TextDialog *ui;
+
+private slots:
+    void on_pasteButton_clicked();
+    void on_openFileButton_clicked();
 };
 
 #endif // TEXTDIALOG_H
