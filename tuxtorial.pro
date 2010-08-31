@@ -5,7 +5,6 @@
 #-------------------------------------------------
 
 QT       += core gui
-
 TARGET = tuxtorial
 TEMPLATE = app
 
@@ -17,15 +16,18 @@ CONFIG(debug, debug|release) {
 
 SOURCES += main.cpp\
     editorwindow.cpp \
-    terminaldialog.cpp
+    terminaldialog.cpp \
+    textdialog.cpp
 
 HEADERS  += \
     editorwindow.h \
-    terminaldialog.h
+    terminaldialog.h \
+    textdialog.h
 
 FORMS    += \
     editorwindow.ui \
-    terminaldialog.ui
+    terminaldialog.ui \
+    textdialog.ui
 
 RESOURCES += \
     icons.qrc
