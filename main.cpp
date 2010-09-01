@@ -6,9 +6,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     EditorWindow editor;
-    //editor.show ();
-    //TextDialog target;
-    //target.show ();
+
 
     return a.exec();
 }

@@ -55,6 +55,7 @@ public slots:
     void StartCapture();
     void ShowWindow(QSystemTrayIcon::ActivationReason);
     void KeybindingActivated(int type);
+    void CleanUp();
 
 
     // Step slots

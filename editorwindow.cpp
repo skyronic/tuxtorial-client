@@ -7,6 +7,7 @@
 #include <QTextStream>
 #include <QDir>
 #include <QDebug>
+#include <QDateTime>
 #include "terminaldialog.h"
 #include "textdialog.h"
 #include "keybindingthread.h"
@@ -20,7 +21,7 @@ EditorWindow::EditorWindow(QWidget *parent) :
     // Initialize properties
     currentStep = 0;
     stepActive = 0;
-    qsrand(42);
+    qsrand(QDateTime::currentDateTime ().toTime_t ());
 
     // Setting the root directory
     // start off with the temp directory
@@ -29,6 +30,8 @@ EditorWindow::EditorWindow(QWidget *parent) :
     if(rootDir.mkdir (randString))
     {
         rootDir.cd (randString);
+        qDebug () << "Created directory";
+
         // make an images directory as well
         rootDir.mkdir ("images");
     }
@@ -62,6 +65,7 @@ EditorWindow::EditorWindow(QWidget *parent) :
     // Connect the actions to corresponding signals
     connect(ui->actionStart, SIGNAL(triggered()), this, SLOT(StartCapture()));
     connect(systray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(ShowWindow(QSystemTrayIcon::ActivationReason)));
+    connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(CleanUp()));
 
     // Keybinding signals
     connect(keybindingThread, SIGNAL(KeybindingActivated(int)), this, SLOT(KeybindingActivated(int)));
@@ -111,7 +115,8 @@ void EditorWindow::ScreenshotTick ()
         screenshotTimer->stop();
 
         ScreenshotUtils scrotUtils;
-        QDir target = rootDir;
+        QDir target(rootDir.absolutePath ());
+        qDebug() << "The rootDir here is: " << rootDir;
         target.cd ("images");
         if(scrotUtils.TakeAndSaveScreenshot (target , currentStep))
         {
@@ -218,4 +223,10 @@ void EditorWindow::SetStepTextContent (QString content, QString syntaxType)
 
     // Append this to the list of steps
     steps.append (target);
+}
+
+void EditorWindow::CleanUp ()
+{
+    int x = 0;
+    QApplication::quit ();
 }
