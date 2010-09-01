@@ -18,13 +18,15 @@ SOURCES += main.cpp\
     editorwindow.cpp \
     terminaldialog.cpp \
     textdialog.cpp \
-    keybindingthread.cpp
+    keybindingthread.cpp \
+    screenshotutils.cpp
 
 HEADERS  += \
     editorwindow.h \
     terminaldialog.h \
     textdialog.h \
-    keybindingthread.h
+    keybindingthread.h \
+    screenshotutils.h
 
 FORMS    += \
     editorwindow.ui \

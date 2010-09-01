@@ -5,9 +5,11 @@
 #include <QIcon>
 #include <QTimer>
 #include <QTextStream>
+#include <QDir>
 #include "terminaldialog.h"
 #include "textdialog.h"
 #include "keybindingthread.h"
+#include "screenshotutils.h"
 
 EditorWindow::EditorWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -87,12 +89,25 @@ void EditorWindow::ScreenshotTick ()
     {
         // Take the screenshot
         screenshotTimer->stop();
+
+        ScreenshotUtils scrotUtils;
+        QDir target("/tmp");
+        if(scrotUtils.TakeAndSaveScreenshot (target , 42))
+        {
+            systray->showMessage (tr("Captured screenshot successfully"), "", QSystemTrayIcon::Information, 1000);
+        }
+        else
+        {
+            systray->showMessage (tr("Sorry, was unable to take screenshot"), "error details: ", QSystemTrayIcon::Critical, 1000);
+        }
+
+        stepActive = false;
     }
     else
     {
         QString message;
         QTextStream(&message) << "in " << screenshotTimeRemaining << " seconds";
-        systray->showMessage ("Will take a screenshot", message, QSystemTrayIcon::Information, screenshotTimeRemaining * 1000 - 200);
+        systray->showMessage (tr("Will take a screenshot"), message, QSystemTrayIcon::Information, screenshotTimeRemaining * 1000 - 200);
         screenshotTimeRemaining --;
     }
 }
@@ -109,6 +124,7 @@ void EditorWindow::StartScreenshotCountdown ()
 void EditorWindow::CancelScreenshotCountdown()
 {
     screenshotTimer->stop ();
+    stepActive = false;
 }
 
 void EditorWindow::ShowTerminalDialog ()
