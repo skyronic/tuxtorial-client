@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QSystemTrayIcon>
 #include "keybindingthread.h"
+#include <QList>
+#include "step.h"
 
 namespace Ui {
     class EditorWindow;
@@ -12,10 +14,13 @@ namespace Ui {
 class QTimer;
 class TerminalDialog;
 class TextDialog;
+class QDir;
 
 class EditorWindow : public QMainWindow
 {
     Q_OBJECT
+
+
 
 public:
     explicit EditorWindow(QWidget *parent = 0);
@@ -24,6 +29,13 @@ public:
 private:
     Ui::EditorWindow *ui;
     KeybindingThread *keybindingThread;
+
+    // Slide data
+    QDir rootDir;
+    QList<Step> steps;
+    int currentStep;
+
+
 
     bool stepActive;
 
@@ -44,6 +56,8 @@ public slots:
     void ShowWindow(QSystemTrayIcon::ActivationReason);
     void KeybindingActivated(int type);
 
+
+    // Step slots
     void StepFinishSuccess ();
     void StepFinishFail ();
     void StepFinishNoRelease ();
@@ -59,6 +73,7 @@ public slots:
 
     // Text slots
     void ShowTextDialog();
+    void SetStepTextContent(QString content, QString syntaxType);
 };
 
 #endif // EDITORWINDOW_H

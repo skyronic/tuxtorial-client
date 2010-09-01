@@ -16,6 +16,22 @@ EditorWindow::EditorWindow(QWidget *parent) :
     ui(new Ui::EditorWindow)
 {
 
+    // Initialize properties
+    currentStep = 0;
+    stepActive = 0;
+    qsrand();
+
+    // Setting the root directory
+    // start off with the temp directory
+    rootDir = QDir::temp ();
+    QString randString =QString::number (srand());
+    if(rootDir.mkdir (randString))
+    {
+        rootDir.cd (randString);
+    }
+    else
+        qDebug() << "ERROR! Unable to create root directory";
+
     terminalDialog = new TerminalDialog;
     terminalDialog->hide ();
 
@@ -148,6 +164,7 @@ void EditorWindow::ShowTextDialog ()
 void EditorWindow::StepFinishSuccess ()
 {
     stepActive = false;
+    currentStep ++;
 }
 
 void EditorWindow::StepFinishFail ()
@@ -157,7 +174,8 @@ void EditorWindow::StepFinishFail ()
 
 void EditorWindow::StepFinishNoRelease ()
 {
-    stepActive = false;
+    stepActive = true;
+    currentStep ++;
 }
 
 
@@ -179,4 +197,13 @@ void EditorWindow::KeybindingActivated (int type)
     }
 }
 
+void EditorWindow::SetStepTextContent (QString content, QString syntaxType)
+{
+    Step target;
+    target.TextContent = content;
+    target.SyntaxHighlight = syntaxType;
+
+    // Append this to the list of steps
+    steps.append (target);
+}
 

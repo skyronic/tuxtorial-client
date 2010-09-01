@@ -62,3 +62,21 @@ void TextDialog::closeEvent (QCloseEvent *ev)
 
     qDebug() << "User tried to close the dialog";
 }
+
+void TextDialog::on_finishStepButton_clicked()
+{
+    // set the text content for the step
+    emit SetStepTextContent (ui->textEdit->document ()->toPlainText (), "plain");
+    ui->textEdit->clear ();
+
+    // Shouldwe keep the dialog open
+    if(ui->keepDialogOpenCheckbox->checkState () == Qt::Checked)
+    {
+        emit StepFinishNoRelease();
+    }
+    else
+    {
+        emit StepFinishSuccess ();
+        this->hide ();
+    }
+}

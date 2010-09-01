@@ -20,6 +20,7 @@ private:
     void closeEvent (QCloseEvent *);
 
 private slots:
+    void on_finishStepButton_clicked();
     void on_pasteButton_clicked();
     void on_openFileButton_clicked();
 
@@ -27,6 +28,8 @@ signals:
     void StepFinishSuccess();
     void StepFinishFail();
     void StepFinishNoRelease();
+
+    void SetStepTextContent(QString content, QString syntaxType);
 };
 
 #endif // TEXTDIALOG_H

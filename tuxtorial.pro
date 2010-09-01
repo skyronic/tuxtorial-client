@@ -19,14 +19,18 @@ SOURCES += main.cpp\
     terminaldialog.cpp \
     textdialog.cpp \
     keybindingthread.cpp \
-    screenshotutils.cpp
+    screenshotutils.cpp \
+    step.cpp \
+    tutorialhelper.cpp
 
 HEADERS  += \
     editorwindow.h \
     terminaldialog.h \
     textdialog.h \
     keybindingthread.h \
-    screenshotutils.h
+    screenshotutils.h \
+    step.h \
+    tutorialhelper.h
 
 FORMS    += \
     editorwindow.ui \
