@@ -3,11 +3,10 @@
 
 #include <QObject>
 
-class Step : public QObject
+class Step
 {
-    Q_OBJECT
 public:
-    explicit Step(QObject *parent = 0);
+    Step();
     enum StepType
     {
         Screenshot,
@@ -22,11 +21,6 @@ public:
 
     // Screenshot parameters
     QString ScreenshotFileName;
-
-signals:
-
-public slots:
-
 };
 
 #endif // STEP_H

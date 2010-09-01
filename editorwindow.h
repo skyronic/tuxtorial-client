@@ -5,6 +5,7 @@
 #include <QSystemTrayIcon>
 #include "keybindingthread.h"
 #include <QList>
+#include <QDir>
 #include "step.h"
 
 namespace Ui {
@@ -14,7 +15,6 @@ namespace Ui {
 class QTimer;
 class TerminalDialog;
 class TextDialog;
-class QDir;
 
 class EditorWindow : public QMainWindow
 {

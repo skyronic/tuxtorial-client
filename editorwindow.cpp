@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QTextStream>
 #include <QDir>
+#include <QDebug>
 #include "terminaldialog.h"
 #include "textdialog.h"
 #include "keybindingthread.h"
@@ -19,15 +20,17 @@ EditorWindow::EditorWindow(QWidget *parent) :
     // Initialize properties
     currentStep = 0;
     stepActive = 0;
-    qsrand();
+    qsrand(42);
 
     // Setting the root directory
     // start off with the temp directory
     rootDir = QDir::temp ();
-    QString randString =QString::number (srand());
+    QString randString =QString::number (qrand());
     if(rootDir.mkdir (randString))
     {
         rootDir.cd (randString);
+        // make an images directory as well
+        rootDir.mkdir ("images");
     }
     else
         qDebug() << "ERROR! Unable to create root directory";
@@ -79,6 +82,7 @@ EditorWindow::EditorWindow(QWidget *parent) :
     connect(textDialog, SIGNAL(StepFinishSuccess()), this, SLOT(StepFinishSuccess()));
     connect(textDialog, SIGNAL(StepFinishFail()), this, SLOT(StepFinishFail()));
     connect(textDialog, SIGNAL(StepFinishNoRelease()), this, SLOT(StepFinishNoRelease()));
+    connect(textDialog, SIGNAL(SetStepTextContent(QString,QString)), this, SLOT(SetStepTextContent(QString,QString)));
 }
 
 EditorWindow::~EditorWindow()
@@ -107,14 +111,22 @@ void EditorWindow::ScreenshotTick ()
         screenshotTimer->stop();
 
         ScreenshotUtils scrotUtils;
-        QDir target("/tmp");
-        if(scrotUtils.TakeAndSaveScreenshot (target , 42))
+        QDir target = rootDir;
+        target.cd ("images");
+        if(scrotUtils.TakeAndSaveScreenshot (target , currentStep))
         {
             systray->showMessage (tr("Captured screenshot successfully"), "", QSystemTrayIcon::Information, 1000);
+            Step target;
+            target.Type = Step::Screenshot;
+            target.ScreenshotFileName = QString::number (currentStep) + ".png";
+            steps.append (target);
+
+            StepFinishSuccess ();
         }
         else
         {
             systray->showMessage (tr("Sorry, was unable to take screenshot"), "error details: ", QSystemTrayIcon::Critical, 1000);
+            StepFinishFail();
         }
 
         stepActive = false;
@@ -141,6 +153,7 @@ void EditorWindow::CancelScreenshotCountdown()
 {
     screenshotTimer->stop ();
     stepActive = false;
+    StepFinishFail ();
 }
 
 void EditorWindow::ShowTerminalDialog ()
@@ -206,4 +219,3 @@ void EditorWindow::SetStepTextContent (QString content, QString syntaxType)
     // Append this to the list of steps
     steps.append (target);
 }
-

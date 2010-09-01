@@ -20,6 +20,7 @@ private:
     void closeEvent (QCloseEvent *);
 
 private slots:
+    void on_discardStepButton_clicked();
     void on_finishStepButton_clicked();
     void on_pasteButton_clicked();
     void on_openFileButton_clicked();

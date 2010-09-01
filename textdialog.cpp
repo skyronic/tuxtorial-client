@@ -80,3 +80,9 @@ void TextDialog::on_finishStepButton_clicked()
         this->hide ();
     }
 }
+
+void TextDialog::on_discardStepButton_clicked()
+{
+    this->hide ();
+    emit StepFinishFail ();
+}
