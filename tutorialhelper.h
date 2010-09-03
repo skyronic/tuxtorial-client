@@ -13,6 +13,7 @@ class TutorialHelper : public QObject
 public:
     explicit TutorialHelper(QObject *parent = 0);
     void setParams(QDir *dir, QList<Step> *stps);
+    void UploadTemp ();
 
 private:
     QDir *rootDir;
