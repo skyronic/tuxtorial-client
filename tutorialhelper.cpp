@@ -6,7 +6,8 @@
 #include <QList>
 #include "step.h"
 #include <QXmlStreamWriter>
-
+#include <QProcess>
+#include <QStringList>
 TutorialHelper::TutorialHelper(QObject *parent) :
     QObject(parent)
 {
@@ -16,6 +17,74 @@ void TutorialHelper::setParams (QDir *dir, QList<Step> *stps)
 {
     rootDir = dir;
     steps = stps;
+}
+
+void TutorialHelper::SerializeToFile (){
+    // do the xml serialization.
+    QString output;
+    QXmlStreamWriter stream(&output);
+    stream.setAutoFormatting (true);
+    stream.writeStartDocument ("0.0");
+    stream.setCodec ("utf-16");
+    stream.writeTextElement ("Title", "The title goes here <br>");
+    stream.writeStartElement ("Steps");
+    // write each step
+    for(int i = 0; i< steps->length (); i++)
+    {
+        Step target = steps->at(i);
+        stream.writeStartElement ("ClientStep");
+        switch(target.Type)
+        {
+        case Step::Screenshot:
+            stream.writeTextElement ("StepType", "Screenshot");
+            stream.writeTextElement ("ScreenshotFileName", target.ScreenshotFileName);
+            break;
+        case Step::Text:
+            stream.writeTextElement ("StepType", "Text");
+            stream.writeTextElement ("TextContent", target.TextContent);
+            stream.writeTextElement ("SyntaxHighlight", target.SyntaxHighlight);
+            break;
+        case Step::Console:
+            stream.writeStartElement ("Commands");
+            for(int j = 0; j < target.Commands.length (); j++)
+            {
+                stream.writeStartElement ("ConsoleCommand");
+                ConsoleCommand command = target.Commands.at (j);
+                stream.writeTextElement ("Command", command.Command);
+                stream.writeTextElement ("Path", command.Path);
+                stream.writeTextElement ("Output", command.Output);
+                stream.writeEndElement ();
+            }
+            stream.writeEndElement ();
+        }
+        stream.writeEndElement ();
+    }
+    stream.writeEndElement ();
+    stream.writeEndDocument ();
+
+    // Save the serialized xml to a file
+    QFile content(rootDir->filePath ("content.xml"));
+    if(content.open (QIODevice::WriteOnly))
+    {
+        content.write (output.toUtf8 ());
+    }
+}
+
+void TutorialHelper::CreateArchive ()
+{
+    QProcess *zipProcess = new QProcess();
+    // get the dir name for later usage
+    QString dirName = rootDir->dirName ();
+    // run the program in /tmp or whatever is the parent of root
+    zipProcess->setWorkingDirectory (rootDir->absolutePath ());
+
+    QString program = "/usr/bin/zip";
+    QStringList args;
+    args << "-r" << dirName + ".zip" << ".";
+
+    zipProcess->start (program, args);
+    zipProcess->waitForFinished ();
+    qDebug() << "Wrote " << dirName << ".zip";
 }
 
 void TutorialHelper::UploadTemp ()
@@ -65,48 +134,12 @@ void TutorialHelper::UploadTemp ()
     t4.Commands.append (c2);
     steps->append (t4);
 
-    // do the xml serialization.
+    this->SerializeToFile ();
+    this->CreateArchive ();
+    this->CleanUp ();
+}
 
-    QString output;
-    QXmlStreamWriter stream(&output);
-    stream.setAutoFormatting (true);
-    stream.writeStartDocument ("0.0");
-    stream.setCodec ("utf-16");
-    stream.writeTextElement ("Title", "The title goes here <br>");
-    stream.writeStartElement ("Steps");
-    // write each step
-    for(int i = 0; i< steps->length (); i++)
-    {
-        Step target = steps->at(i);
-        stream.writeStartElement ("ClientStep");
-        switch(target.Type)
-        {
-        case Step::Screenshot:
-            stream.writeTextElement ("StepType", "Screenshot");
-            stream.writeTextElement ("ScreenshotFileName", target.ScreenshotFileName);
-            break;
-        case Step::Text:
-            stream.writeTextElement ("StepType", "Text");
-            stream.writeTextElement ("TextContent", target.TextContent);
-            stream.writeTextElement ("SyntaxHighlight", target.SyntaxHighlight);
-            break;
-        case Step::Console:
-            stream.writeStartElement ("Commands");
-            for(int j = 0; j < target.Commands.length (); j++)
-            {
-                stream.writeStartElement ("ConsoleCommand");
-                ConsoleCommand command = target.Commands.at (j);
-                stream.writeTextElement ("Command", command.Command);
-                stream.writeTextElement ("Path", command.Path);
-                stream.writeTextElement ("Output", command.Output);
-                stream.writeEndElement ();
-            }
-            stream.writeEndElement ();
-        }
-        stream.writeEndElement ();
-    }
-    stream.writeEndElement ();
-    stream.writeEndDocument ();
-
-    qDebug() << "The result is: " << output;
+void TutorialHelper::CleanUp ()
+{
+    rootDir->rmdir (rootDir->absolutePath ());
 }

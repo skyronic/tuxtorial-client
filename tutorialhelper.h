@@ -14,6 +14,9 @@ public:
     explicit TutorialHelper(QObject *parent = 0);
     void setParams(QDir *dir, QList<Step> *stps);
     void UploadTemp ();
+    void SerializeToFile ();
+    void CreateArchive ();
+    void CleanUp ();
 
 private:
     QDir *rootDir;
