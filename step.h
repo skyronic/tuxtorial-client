@@ -29,6 +29,9 @@ public:
     // Screenshot parameters
     QString ScreenshotFileName;
 
+    // this should be used only for the app and not sent to the server
+    QString ScreenshotPath;
+
     // console parameters
     QList<ConsoleCommand> Commands;
 };

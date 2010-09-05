@@ -11,7 +11,7 @@ class ScreenshotUtils : public QObject
     Q_OBJECT
 public:
     explicit ScreenshotUtils(QObject *parent = 0);
-    bool TakeAndSaveScreenshot(QDir dir, int stepNumber);
+    bool TakeAndSaveScreenshot(QDir dir, int stepNumber, QString &screenshotPath);
 
 signals:
 

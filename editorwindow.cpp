@@ -135,12 +135,14 @@ void EditorWindow::ScreenshotTick ()
         QDir target(rootDir.absolutePath ());
         qDebug() << "The rootDir here is: " << rootDir;
         target.cd ("images");
-        if(scrotUtils.TakeAndSaveScreenshot (target , currentStep))
+        QString screenshotPath;
+        if(scrotUtils.TakeAndSaveScreenshot (target , currentStep, screenshotPath))
         {
             systray->showMessage (tr("Captured screenshot successfully"), "", QSystemTrayIcon::Information, 1000);
             Step target;
             target.Type = Step::Screenshot;
             target.ScreenshotFileName = QString::number (currentStep) + ".png";
+            target.ScreenshotPath =screenshotPath;
             steps.append (target);
 
             StepFinishSuccess ();

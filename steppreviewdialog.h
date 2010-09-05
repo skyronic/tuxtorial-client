@@ -19,6 +19,9 @@ public:
 private:
     Ui::StepPreviewDialog *ui;
     Step *target;
+
+private slots:
+    void on_buttonBox_accepted();
 };
 
 #endif // STEPPREVIEWDIALOG_H

@@ -12,7 +12,7 @@ ScreenshotUtils::ScreenshotUtils(QObject *parent) :
 {
 }
 
-bool ScreenshotUtils::TakeAndSaveScreenshot (QDir rootPath, int stepNumber)
+bool ScreenshotUtils::TakeAndSaveScreenshot (QDir rootPath, int stepNumber, QString& screenshotPath)
 {
     QPixmap screenshotMap;
     qDebug() << "The rootpath is " << rootPath.absolutePath ();
@@ -22,6 +22,7 @@ bool ScreenshotUtils::TakeAndSaveScreenshot (QDir rootPath, int stepNumber)
     {
         qDebug() << "Saved screenshot to: " << scrotFile.fileName ();
         screenshotMap.save (&scrotFile);
+        screenshotPath = scrotFile.fileName();
     }
     else
     {
