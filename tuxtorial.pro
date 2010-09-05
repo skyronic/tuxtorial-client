@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     keybindingthread.cpp \
     screenshotutils.cpp \
     step.cpp \
-    tutorialhelper.cpp
+    tutorialhelper.cpp \
+    steppreviewdialog.cpp
 
 HEADERS  += \
     editorwindow.h \
@@ -30,12 +31,14 @@ HEADERS  += \
     keybindingthread.h \
     screenshotutils.h \
     step.h \
-    tutorialhelper.h
+    tutorialhelper.h \
+    steppreviewdialog.h
 
 FORMS    += \
     editorwindow.ui \
     terminaldialog.ui \
-    textdialog.ui
+    textdialog.ui \
+    steppreviewdialog.ui
 
 RESOURCES += \
     icons.qrc

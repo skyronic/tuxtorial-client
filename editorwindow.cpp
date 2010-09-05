@@ -7,11 +7,19 @@
 #include <QTextStream>
 #include <QDir>
 #include <QDebug>
+#include <QMenu>
 #include <QDateTime>
+#include <QListWidget>
+#include <QListWidgetItem>
+#include <QModelIndex>
+#include <QMessageBox>
+#include <QCloseEvent>
+
 #include "terminaldialog.h"
 #include "textdialog.h"
 #include "keybindingthread.h"
 #include "screenshotutils.h"
+#include "steppreviewdialog.h"
 
 EditorWindow::EditorWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -66,6 +74,7 @@ EditorWindow::EditorWindow(QWidget *parent) :
     connect(ui->actionStart, SIGNAL(triggered()), this, SLOT(StartCapture()));
     connect(systray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(ShowWindow(QSystemTrayIcon::ActivationReason)));
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(CleanUp()));
+    connect(ui->stepListWidget, SIGNAL(activated(QModelIndex)), this, SLOT(StepListActivated(QModelIndex)));
 
     // Keybinding signals
     connect(keybindingThread, SIGNAL(KeybindingActivated(int)), this, SLOT(KeybindingActivated(int)));
@@ -92,6 +101,14 @@ EditorWindow::EditorWindow(QWidget *parent) :
 EditorWindow::~EditorWindow()
 {
     delete ui;
+}
+
+void EditorWindow::StepListActivated (QModelIndex index)
+{
+    qDebug() << "The activated row is: " << index.row ();
+    StepPreviewDialog *preview = new StepPreviewDialog(&steps.at(index.row()));
+    preview->show ();
+
 }
 
 void EditorWindow::StartCapture ()
@@ -181,19 +198,24 @@ void EditorWindow::ShowTextDialog ()
 
 void EditorWindow::StepFinishSuccess ()
 {
+    qDebug() << "Step finished successfully";
     stepActive = false;
     currentStep ++;
+    RefreshStepList ();
 }
 
 void EditorWindow::StepFinishFail ()
 {
+    qDebug() << "Step did not finish successfully";
     stepActive = false;
 }
 
 void EditorWindow::StepFinishNoRelease ()
 {
+    qDebug() << "Step finished. No release";
     stepActive = true;
     currentStep ++;
+    RefreshStepList ();
 }
 
 
@@ -220,6 +242,7 @@ void EditorWindow::SetStepTextContent (QString content, QString syntaxType)
     Step target;
     target.TextContent = content;
     target.SyntaxHighlight = syntaxType;
+    target.Type = Step::Text;
 
     // Append this to the list of steps
     steps.append (target);
@@ -228,5 +251,86 @@ void EditorWindow::SetStepTextContent (QString content, QString syntaxType)
 void EditorWindow::CleanUp ()
 {
     int x = 0;
+    QString dirname = rootDir.dirName ();
+    rootDir.cdUp ();
+    rootDir.rmdir (dirname);
+    qDebug() << "Removed the temporary files.";
     QApplication::quit ();
+}
+
+void EditorWindow::on_commandLinkButton_clicked()
+{
+    this->hide ();
+}
+
+void EditorWindow::RefreshStepList ()
+{
+    // clean up the list widget as we'll redraw the list
+    // this is a lazier way than going and keeping my step lists
+    // and the view widget in sync.
+    qDebug() << "Refreshing the step list now";
+    QList<QListWidgetItem*> rowItems;
+    for(int i=0; i<ui->stepListWidget->count (); i++)
+    {
+        QListWidgetItem *rowItem  = ui->stepListWidget->item (i);
+        rowItems.append (rowItem);
+    }
+
+    // gather all the items first and then delete them. My naive guess
+    // is that if I remove the widget straight away, then the item(i)
+    // function will start to behave differently
+
+    for(int j=0; j < rowItems.count (); j++)
+    {
+        ui->stepListWidget->removeItemWidget (rowItems.at (j));
+        delete rowItems.at(j); // clean up memoy
+    }
+
+    // now add rows for each step
+    for(int k = 0; k < steps.count (); k++)
+    {
+        Step toAdd = steps.at (k);
+        QListWidgetItem *itemToAdd = new QListWidgetItem();
+        switch(toAdd.Type)
+        {
+        case Step::Screenshot:
+            itemToAdd->setText ("Screenshot");
+            itemToAdd->setIcon (QIcon(":/icons/helpicon.png"));
+            break;
+        case Step::Console:
+            itemToAdd->setText ("Console");
+            itemToAdd->setIcon (QIcon(":/icons/helpicon.png"));
+            break;
+        case Step::Text:
+            itemToAdd->setText ("Text");
+            itemToAdd->setIcon (QIcon(":/icons/helpicon.png"));
+            break;
+        default:
+            qDebug() << "Error! unknown step type";
+        }
+        ui->stepListWidget->addItem (itemToAdd);
+    }
+}
+
+// Execute this while closing the app
+void EditorWindow::closeEvent (QCloseEvent *ev)
+{
+    // show a dialog asking whether to go to
+    QMessageBox msgBox;
+    msgBox.setText ("Quit tuxtorial");
+    msgBox.setInformativeText ("Do you want to quit or hide to system tray");
+
+    QPushButton *hideButton = msgBox.addButton ("Hide", QMessageBox::RejectRole);
+    QPushButton *quitButton = msgBox.addButton ("Quit", QMessageBox::AcceptRole);
+
+    msgBox.exec ();
+    if(msgBox.clickedButton () == hideButton)
+    {
+        ev->ignore ();
+        this->hide ();
+    }
+    else
+    {
+        CleanUp ();
+    }
 }
