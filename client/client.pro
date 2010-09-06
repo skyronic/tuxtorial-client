@@ -5,14 +5,19 @@
 #-------------------------------------------------
 
 QT       += core gui
-TARGET = tuxtorial
+CONFIG += qt debug_and_release warn_on build_all
 TEMPLATE = app
 DESTDIR = ..
+MOC_DIR = ../.moc
 
 CONFIG(debug, debug|release) {
+    OBJECTS_DIR = ../.objs_d
     LIBS 	+= -L.. ../libqtermwidget_d.a
+    TARGET = tuxtorial_d
 } else {
+    OBJECTS_DIR = ../.objs
     LIBS 	+= -L.. ../libqtermwidget.a
+    TARGET = tuxtorial
 }
 
 SOURCES += main.cpp\
