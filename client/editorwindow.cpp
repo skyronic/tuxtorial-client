@@ -20,6 +20,7 @@
 #include "keybindingthread.h"
 #include "screenshotutils.h"
 #include "steppreviewdialog.h"
+#include "tutorialhelper.h"
 
 EditorWindow::EditorWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -46,6 +47,9 @@ EditorWindow::EditorWindow(QWidget *parent) :
     else
         qDebug() << "ERROR! Unable to create root directory";
 
+    tutorialHelper = new TutorialHelper();
+    tutorialHelper->setParams (&rootDir, &steps);
+
     terminalDialog = new TerminalDialog;
     terminalDialog->hide ();
 
@@ -68,7 +72,6 @@ EditorWindow::EditorWindow(QWidget *parent) :
     systray->contextMenu ()->addAction (ui->actionExit);
     systray->show ();
 
-    // Set the three screenshot options:
 
     // Connect the actions to corresponding signals
     connect(ui->actionStart, SIGNAL(triggered()), this, SLOT(StartCapture()));
@@ -344,4 +347,10 @@ void EditorWindow::closeEvent (QCloseEvent *ev)
     {
         CleanUp ();
     }
+}
+
+void EditorWindow::on_uploadButton_clicked()
+{
+    tutorialHelper->SerializeToFile ();
+    tutorialHelper->CreateArchive ();
 }

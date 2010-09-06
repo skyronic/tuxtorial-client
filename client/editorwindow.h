@@ -15,6 +15,7 @@ namespace Ui {
 
 class QTimer;
 class TerminalDialog;
+class TutorialHelper;
 class TextDialog;
 
 class EditorWindow : public QMainWindow
@@ -36,6 +37,8 @@ private:
     QDir rootDir;
     QList<Step> steps;
     int currentStep;
+
+    TutorialHelper *tutorialHelper;
 
 
 
@@ -84,6 +87,7 @@ public slots:
     void SetStepTextContent(QString content, QString syntaxType);
 
 private slots:
+    void on_uploadButton_clicked();
     void on_commandLinkButton_clicked();
 };
 

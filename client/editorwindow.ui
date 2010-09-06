@@ -185,7 +185,7 @@
           </layout>
          </item>
          <item>
-          <widget class="QCommandLinkButton" name="commandLinkButton_2">
+          <widget class="QCommandLinkButton" name="uploadButton">
            <property name="text">
             <string>Upload</string>
            </property>

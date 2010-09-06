@@ -24,7 +24,7 @@ void TutorialHelper::SerializeToFile (){
     QString output;
     QXmlStreamWriter stream(&output);
     stream.setAutoFormatting (true);
-    stream.writeStartDocument ("0.0");
+    stream.writeStartDocument ("1.0");
     stream.setCodec ("utf-16");
     stream.writeTextElement ("Title", "The title goes here <br>");
     stream.writeStartElement ("Steps");
@@ -45,17 +45,9 @@ void TutorialHelper::SerializeToFile (){
             stream.writeTextElement ("SyntaxHighlight", target.SyntaxHighlight);
             break;
         case Step::Console:
-            stream.writeStartElement ("Commands");
-            for(int j = 0; j < target.Commands.length (); j++)
-            {
-                stream.writeStartElement ("ConsoleCommand");
-                ConsoleCommand command = target.Commands.at (j);
-                stream.writeTextElement ("Command", command.Command);
-                stream.writeTextElement ("Path", command.Path);
-                stream.writeTextElement ("Output", command.Output);
-                stream.writeEndElement ();
-            }
-            stream.writeEndElement ();
+            stream.writeTextElement ("StepType", "Console");
+            stream.writeTextElement ("TextContent", target.TextContent);
+            break;
         }
         stream.writeEndElement ();
     }
@@ -77,6 +69,11 @@ void TutorialHelper::CreateArchive ()
     QString dirName = rootDir->dirName ();
     // run the program in /tmp or whatever is the parent of root
     zipProcess->setWorkingDirectory (rootDir->absolutePath ());
+
+    // check if dirname.zip already exists
+    if(QFile::exists (rootDir->absoluteFilePath (dirName + ".zip")))
+        QFile::remove (rootDir->absoluteFilePath (dirName + ".zip"));
+
 
     QString program = "/usr/bin/zip";
     QStringList args;
