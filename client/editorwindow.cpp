@@ -89,6 +89,7 @@ EditorWindow::EditorWindow(QWidget *parent) :
     connect(terminalDialog, SIGNAL(StepFinishSuccess()), this, SLOT(StepFinishSuccess()));
     connect(terminalDialog, SIGNAL(StepFinishFail()), this, SLOT(StepFinishFail()));
     connect(terminalDialog, SIGNAL(StepFinishNoRelease()), this, SLOT(StepFinishNoRelease()));
+    connect(terminalDialog, SIGNAL(SetStepConsoleContent(QString)), this, SLOT(SetStepConsoleContent(QString)));
 
     // text widget signals
     connect(ui->actionCapture_Text, SIGNAL(triggered()), this, SLOT(ShowTextDialog()));

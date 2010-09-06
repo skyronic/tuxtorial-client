@@ -5,16 +5,27 @@
 #include <QFile>
 #include <QDir>
 #include <QTemporaryFile>
+#include <QTextStream>
 
 const QString stepFile = "/tmp/.ttstep";
 TerminalDialog::TerminalDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::TerminalDialog)
 {
+    commandScript = new QTemporaryFile();
     QFile ttCommandScript(":/static/ttcommand.sh");
     if(ttCommandScript.open (QIODevice::ReadOnly))
     {
         QString content(ttCommandScript.readAll ());
+        commandScript->open ();
+        // write it to commandScript
+        QTextStream contentStream(commandScript);
+
+
+        contentStream << content;
+        commandScript->setAutoRemove (true);
+        rcFilePath = commandScript->fileName ();
+        commandScript->close ();
     }
     else
     {
@@ -45,22 +56,31 @@ void TerminalDialog::ReloadTerminal ()
     QFont font = QApplication::font ();
     font.setFamily ("monospace");
     font.setPointSize (10);
-    termWidget = new QTermWidget(1);
+    termWidget = new QTermWidget(0);
     if(redrewTerminalFlag)
     {
         QString message = "#Please don't quit the terminal session. Use the discard and finish buttons so that the environment is consistent and the tutorial is easier to follow.\r";
         termWidget->sendText (message);
     }
+
+    QStringList args;
+    args << "--rcfile " + rcFilePath;
+    termWidget->startShellProgram ();
     termWidget->setScrollBarPosition (QTermWidget::ScrollBarRight);
     termWidget->setTerminalFont (font);
     connect(termWidget, SIGNAL(finished()), this, SLOT(TerminalClosed()));
 
     ui->terminalTargetLayout->addWidget (termWidget);
     termWidget->show ();
+    QString message = "source " + rcFilePath + "\r";
+    termWidget->sendText(message);
 }
 
 TerminalDialog::~TerminalDialog()
 {
+    qDebug() << "Deleting step files and command script";
+    commandScript->remove ();
+    delete commandScript;
     delete ui;
 }
 

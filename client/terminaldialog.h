@@ -22,6 +22,8 @@ private:
     QTermWidget *termWidget;
     void closeEvent (QCloseEvent *ev);
     void ReloadTerminal();
+    QTemporaryFile *commandScript;
+    QString rcFilePath;
 
 signals:
     void StepFinishSuccess();
