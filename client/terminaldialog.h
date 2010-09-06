@@ -29,6 +29,8 @@ signals:
 
 private slots:
     void on_TerminalDialog_destroyed();
+public slots:
+    void TerminalClosed();
 };
 
 #endif // TERMINALDIALOG_H
