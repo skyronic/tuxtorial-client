@@ -11,6 +11,7 @@ TextDialog::TextDialog(QWidget *parent) :
     ui(new Ui::TextDialog)
 {
     ui->setupUi(this);
+    connect(this, SIGNAL(rejected()), this, SLOT(on_discardStepButton_clicked()));
 }
 
 TextDialog::~TextDialog()
@@ -56,6 +57,7 @@ void TextDialog::closeEvent (QCloseEvent *ev)
 {
     ev->ignore ();
     this->hide ();
+    ui->textEdit->clear ();
 
     // closing the window is a failed step
     emit StepFinishFail ();
@@ -83,6 +85,7 @@ void TextDialog::on_finishStepButton_clicked()
 
 void TextDialog::on_discardStepButton_clicked()
 {
+    ui->textEdit->clear ();
     this->hide ();
     emit StepFinishFail ();
 }

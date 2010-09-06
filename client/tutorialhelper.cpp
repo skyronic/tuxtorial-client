@@ -26,6 +26,7 @@ void TutorialHelper::SerializeToFile (){
     stream.setAutoFormatting (true);
     stream.writeStartDocument ("1.0");
     stream.setCodec ("utf-16");
+    stream.writeStartElement ("ClientTutorial");
     stream.writeTextElement ("Title", "The title goes here <br>");
     stream.writeStartElement ("Steps");
     // write each step
@@ -51,6 +52,7 @@ void TutorialHelper::SerializeToFile (){
         }
         stream.writeEndElement ();
     }
+    stream.writeEndElement ();
     stream.writeEndElement ();
     stream.writeEndDocument ();
 

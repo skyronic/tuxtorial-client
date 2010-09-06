@@ -34,6 +34,7 @@ TerminalDialog::TerminalDialog(QWidget *parent) :
     ui->setupUi(this);
     termWidget = NULL;
     ReloadTerminal ();
+    connect(this, SIGNAL(rejected()), this, SLOT(on_discardStepButton_clicked()));
 
     // set up the stepfile
     if(QFile::exists (stepFile))
@@ -102,6 +103,7 @@ void TerminalDialog::closeEvent (QCloseEvent *ev)
     this->hide ();
 
     emit StepFinishFail ();
+    qDebug() << "Closed the terminal and discarded the step";
 }
 
 void TerminalDialog::on_discardStepButton_clicked()
