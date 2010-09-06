@@ -1,5 +1,5 @@
 #!/bin/bash
-stepfile="/tmp/tt.txt"
+stepfile="/tmp/.ttstep"
 function tt()
 {
     commandId=$RANDOM

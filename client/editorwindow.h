@@ -77,6 +77,7 @@ public slots:
 
     // Terminal slots
     void ShowTerminalDialog();
+    void SetStepConsoleContent(QString content);
 
     // Text slots
     void ShowTextDialog();

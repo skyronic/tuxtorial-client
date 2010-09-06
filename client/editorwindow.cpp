@@ -250,6 +250,14 @@ void EditorWindow::SetStepTextContent (QString content, QString syntaxType)
     steps.append (target);
 }
 
+void EditorWindow::SetStepConsoleContent (QString content)
+{
+    Step target;
+    target.TextContent= content;
+    target.Type = Step::Console;
+    steps.append (target);
+}
+
 void EditorWindow::CleanUp ()
 {
     int x = 0;

@@ -7,6 +7,7 @@ namespace Ui {
     class TerminalDialog;
 }
 class QTermWidget;
+class QTemporaryFile;
 
 class TerminalDialog : public QDialog
 {
@@ -20,14 +21,18 @@ private:
     Ui::TerminalDialog *ui;
     QTermWidget *termWidget;
     void closeEvent (QCloseEvent *ev);
+    void ReloadTerminal();
 
 signals:
     void StepFinishSuccess();
     void StepFinishFail();
     void StepFinishNoRelease();
+    void SetStepConsoleContent(QString content);
 
 
 private slots:
+    void on_finishStepButton_clicked();
+    void on_discardStepButton_clicked();
     void on_TerminalDialog_destroyed();
 public slots:
     void TerminalClosed();

@@ -48,7 +48,7 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,0">
         <item>
-         <widget class="QCommandLinkButton" name="commandLinkButton_2">
+         <widget class="QCommandLinkButton" name="discardStepButton">
           <property name="text">
            <string>Discard step.</string>
           </property>
@@ -93,7 +93,7 @@ p, li { white-space: pre-wrap; }
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QCommandLinkButton" name="commandLinkButton">
+         <widget class="QCommandLinkButton" name="finishStepButton">
           <property name="text">
            <string>Finish Step</string>
           </property>
@@ -103,7 +103,7 @@ p, li { white-space: pre-wrap; }
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox">
+         <widget class="QCheckBox" name="keepDialogOpenCheckBox">
           <property name="text">
            <string>Don't close dialog.</string>
           </property>
