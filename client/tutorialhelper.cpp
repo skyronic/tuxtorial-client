@@ -8,6 +8,13 @@
 #include <QXmlStreamWriter>
 #include <QProcess>
 #include <QStringList>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QHttp>
+#include <QByteArray>
+#include <QBuffer>
+#include <QApplication>
+
 TutorialHelper::TutorialHelper(QObject *parent) :
     QObject(parent)
 {
@@ -84,6 +91,72 @@ void TutorialHelper::CreateArchive ()
     zipProcess->start (program, args);
     zipProcess->waitForFinished ();
     qDebug() << "Wrote " << dirName << ".zip";
+    archivePath = rootDir->absoluteFilePath (dirName + ".zip");
+}
+
+//void TutorialHelper::StartUpload ()
+//{
+//    QNetworkAccessManager *nwam = new QNetworkAccessManager();
+//    QNetworkRequest req(QUrl("http://localhost:8080/Story/UploadStory2"));
+
+//    QByteArray data, binary;
+//    QUrl params;
+
+//    QFile uploadFile(archivePath);
+//    uploadFile.open(QIODevice::ReadOnly);
+//    QDataStream in(&uploadFile);
+//    in >> binary;
+
+//    params.addEncodedQueryItem ("file", binary);
+//    data.append (params.toString ());
+
+//    qDebug() << "The data is: " << data;
+
+//    nwam->post (req, data);
+//    QHttp *http = new QHttp();
+//    http->setHost ("localhost:8080");
+//    QByteArray ba;
+//    QBuffer buffer(&ba);
+//    buffer.open (QBuffer::ReadWrite);
+//    QFile archive(archivePath);
+//    archive.open(QIODevice::ReadOnly);
+//    buffer.write (archive.readAll ());
+
+//    qDebug() << "Sending following data to server: " << ba;
+
+//    http->post ("/Story/UploadStory2", ba);
+//    SlotUploadDB(archivePath);
+
+//}
+
+void TutorialHelper::StartUpload ()
+{
+        QString bound;
+        QString crlf;
+        QString data;
+        QByteArray dataToSend;
+        QFile file(archivePath);
+        file.open(QIODevice::ReadOnly);
+
+        bound = "---------------------------7d935033608e2";
+        crlf = 0x0d;
+        crlf += 0x0a;
+        data = "--" + bound + crlf + "Content-Disposition: form-data; name=\"file\"; ";
+        data += "filename=\"uploadfile.zip\"";
+        data += crlf + "Content-Type: application/octet-stream" + crlf + crlf;
+        dataToSend.insert(0,data);
+        dataToSend.append(file.readAll());
+        dataToSend.append(crlf + "--" + bound + "--" + crlf);
+
+        QUrl url("http://localhost:8080/Story/UploadStory2");
+        QNetworkRequest req(url);
+        req.setHeader(QNetworkRequest::ContentTypeHeader, tr("multipart/form-data; boundary=") + bound);
+        file.close();
+
+        QNetworkAccessManager * manager = new QNetworkAccessManager();
+        //connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(SlotRequestFinished(QNetworkReply*)));
+        QNetworkReply * reply = manager->post(req, dataToSend);
+        //connect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(SlotSetProgressLevel(qint64, qint64)));
 }
 
 void TutorialHelper::UploadTemp ()

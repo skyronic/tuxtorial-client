@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 CONFIG += qt debug_and_release warn_on build_all
 TEMPLATE = app
 DESTDIR = ..

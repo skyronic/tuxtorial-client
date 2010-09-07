@@ -353,4 +353,6 @@ void EditorWindow::on_uploadButton_clicked()
 {
     tutorialHelper->SerializeToFile ();
     tutorialHelper->CreateArchive ();
+    tutorialHelper->StartUpload ();
+
 }

@@ -17,10 +17,12 @@ public:
     void SerializeToFile ();
     void CreateArchive ();
     void CleanUp ();
+    void StartUpload();
 
 private:
     QDir *rootDir;
     QList<Step> *steps;
+    QString archivePath;
 signals:
 
 public slots:
