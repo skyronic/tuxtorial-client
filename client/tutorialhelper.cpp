@@ -10,6 +10,7 @@
 #include <QStringList>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QHttp>
 #include <QByteArray>
 #include <QBuffer>
@@ -94,40 +95,6 @@ void TutorialHelper::CreateArchive ()
     archivePath = rootDir->absoluteFilePath (dirName + ".zip");
 }
 
-//void TutorialHelper::StartUpload ()
-//{
-//    QNetworkAccessManager *nwam = new QNetworkAccessManager();
-//    QNetworkRequest req(QUrl("http://localhost:8080/Story/UploadStory2"));
-
-//    QByteArray data, binary;
-//    QUrl params;
-
-//    QFile uploadFile(archivePath);
-//    uploadFile.open(QIODevice::ReadOnly);
-//    QDataStream in(&uploadFile);
-//    in >> binary;
-
-//    params.addEncodedQueryItem ("file", binary);
-//    data.append (params.toString ());
-
-//    qDebug() << "The data is: " << data;
-
-//    nwam->post (req, data);
-//    QHttp *http = new QHttp();
-//    http->setHost ("localhost:8080");
-//    QByteArray ba;
-//    QBuffer buffer(&ba);
-//    buffer.open (QBuffer::ReadWrite);
-//    QFile archive(archivePath);
-//    archive.open(QIODevice::ReadOnly);
-//    buffer.write (archive.readAll ());
-
-//    qDebug() << "Sending following data to server: " << ba;
-
-//    http->post ("/Story/UploadStory2", ba);
-//    SlotUploadDB(archivePath);
-
-//}
 
 void TutorialHelper::StartUpload ()
 {
@@ -153,9 +120,9 @@ void TutorialHelper::StartUpload ()
         req.setHeader(QNetworkRequest::ContentTypeHeader, tr("multipart/form-data; boundary=") + bound);
         file.close();
 
-        QNetworkAccessManager * manager = new QNetworkAccessManager();
+        manager = new QNetworkAccessManager();
         //connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(SlotRequestFinished(QNetworkReply*)));
-        QNetworkReply * reply = manager->post(req, dataToSend);
+        reply = manager->post(req, dataToSend);
         //connect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(SlotSetProgressLevel(qint64, qint64)));
 }
 

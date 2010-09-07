@@ -6,6 +6,8 @@
 
 class Step;
 class QDir;
+class QNetworkAccessManager;
+class QNetworkReply;
 
 class TutorialHelper : public QObject
 {
@@ -18,6 +20,9 @@ public:
     void CreateArchive ();
     void CleanUp ();
     void StartUpload();
+
+    QNetworkAccessManager *manager;
+    QNetworkReply *reply;
 
 private:
     QDir *rootDir;

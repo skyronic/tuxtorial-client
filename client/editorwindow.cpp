@@ -14,6 +14,7 @@
 #include <QModelIndex>
 #include <QMessageBox>
 #include <QCloseEvent>
+#include <QtNetwork/QNetworkReply>
 
 #include "terminaldialog.h"
 #include "textdialog.h"
@@ -349,10 +350,25 @@ void EditorWindow::closeEvent (QCloseEvent *ev)
     }
 }
 
+void EditorWindow::UpdateNetworkCount(qint64 complete, qint64 total)
+{
+    ui->progressBar->setValue ((complete * 100) / total);
+    QString format;
+    ui->progressBar->setFormat (format.sprintf ("%d of %d complete", complete, total));
+}
+
+void EditorWindow::UploadFinished(QNetworkReply *reply)
+{
+    QString response(reply->readAll ());
+    qDebug() << "The response from the server is: " << response;
+}
+
 void EditorWindow::on_uploadButton_clicked()
 {
     tutorialHelper->SerializeToFile ();
     tutorialHelper->CreateArchive ();
     tutorialHelper->StartUpload ();
 
+    connect(tutorialHelper->reply, SIGNAL(uploadProgress(qint64,qint64)), this, SLOT(UpdateNetworkCount(qint64,qint64)));
+    connect(tutorialHelper->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(UploadFinished(QNetworkReply*)));
 }

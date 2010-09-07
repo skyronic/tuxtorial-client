@@ -14,6 +14,7 @@ namespace Ui {
 }
 
 class QTimer;
+class QNetworkReply;
 class TerminalDialog;
 class TutorialHelper;
 class TextDialog;
@@ -85,6 +86,11 @@ public slots:
     // Text slots
     void ShowTextDialog();
     void SetStepTextContent(QString content, QString syntaxType);
+
+    // network slots
+    void UpdateNetworkCount(qint64 complete, qint64 total);
+    void UploadFinished(QNetworkReply *reply);
+
 
 private slots:
     void on_uploadButton_clicked();
