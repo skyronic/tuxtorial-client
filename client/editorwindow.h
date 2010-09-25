@@ -7,6 +7,7 @@
 #include <QList>
 #include <QDir>
 #include <QModelIndex>
+#include <QtNetwork/QNetworkReply>
 #include "step.h"
 
 namespace Ui {
@@ -14,7 +15,6 @@ namespace Ui {
 }
 
 class QTimer;
-class QNetworkReply;
 class TerminalDialog;
 class TutorialHelper;
 class TextDialog;
@@ -91,6 +91,9 @@ public slots:
     // network slots
     void UpdateNetworkCount(qint64 complete, qint64 total);
     void UploadFinished(QNetworkReply *reply);
+    void PasswordVerifySuccess();
+    void PasswordVerifyFail();
+    void NetworkError (QNetworkReply::NetworkError error);
 
 
 private slots:

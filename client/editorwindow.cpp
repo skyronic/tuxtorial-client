@@ -360,20 +360,58 @@ void EditorWindow::UpdateNetworkCount(qint64 complete, qint64 total)
 void EditorWindow::UploadFinished(QNetworkReply *reply)
 {
     QString response(reply->readAll ());
+    ui->uploadButton->setEnabled (true);
     qDebug() << "The response from the server is: " << response;
+}
+
+void EditorWindow::PasswordVerifyFail ()
+{
+    QMessageBox msg;
+    msg.setText("Invalid Password");
+    msg.setInformativeText ("Please check your username/password and try again");
+    msg.setIcon (QMessageBox::Critical);
+    msg.show ();
+    ui->uploadButton->setEnabled (true);
+}
+
+void EditorWindow::PasswordVerifySuccess ()
+{
+    ProcessAndStartUpload ();
 }
 
 void EditorWindow::ProcessAndStartUpload()
 {
+    tutorialHelper->desc = ui->descriptionEdit->toPlainText ();
+    tutorialHelper->title = ui->titleEdit->text ();
     tutorialHelper->SerializeToFile ();
     tutorialHelper->CreateArchive ();
     tutorialHelper->StartUpload ();
 
+
     connect(tutorialHelper->reply, SIGNAL(uploadProgress(qint64,qint64)), this, SLOT(UpdateNetworkCount(qint64,qint64)));
     connect(tutorialHelper->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(UploadFinished(QNetworkReply*)));
+    connect(tutorialHelper->reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(NetworkError(QNetworkReply::NetworkError)));
+}
+
+void EditorWindow::NetworkError (QNetworkReply::NetworkError error)
+{
+    QMessageBox msg;
+    msg.setText ("Connectivity error");
+    QString info;
+    info = info.sprintf ("The error code is: %d. Please check your network connection or try again later.", error);
+    qDebug() << info;
+    msg.setInformativeText (info);
+    msg.setIcon (QMessageBox::Critical);
+    msg.exec ();
+
+    ui->uploadButton->setEnabled (true);
 }
 
 void EditorWindow::on_uploadButton_clicked()
 {
+    ui->uploadButton->setEnabled (false);
     tutorialHelper->VerifyPassword (ui->usernameLineEdit->text (), ui->passwordLineEdit->text ());
+    connect(tutorialHelper, SIGNAL(PasswordVerifyFail()), this, SLOT(PasswordVerifyFail()));
+    connect(tutorialHelper, SIGNAL(PasswordVerifySuccess ()), this, SLOT(PasswordVerifySuccess ()));
+    connect(tutorialHelper->authReply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(NetworkError(QNetworkReply::NetworkError)));
 }

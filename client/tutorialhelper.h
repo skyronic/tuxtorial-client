@@ -22,10 +22,12 @@ public:
     void StartUpload();
     void VerifyPassword (QString username, QString password);
 
+
+    // TODO: This is bad practice. change to m_thingies
     QNetworkAccessManager *manager;
     QNetworkReply *reply;
-
     QNetworkReply *authReply;
+    QString title, desc;
 
 private:
     QDir *rootDir;

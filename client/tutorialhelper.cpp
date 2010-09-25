@@ -38,7 +38,8 @@ void TutorialHelper::SerializeToFile (){
     stream.writeStartDocument ("1.0");
     stream.setCodec ("utf-16");
     stream.writeStartElement ("ClientTutorial");
-    stream.writeTextElement ("Title", "The title goes here <br>");
+    stream.writeTextElement ("Title", this->title);
+    stream.writeTextElement ("Description", this->desc);
     stream.writeStartElement ("Steps");
     // write each step
     for(int i = 0; i< steps->length (); i++)
@@ -121,7 +122,12 @@ void TutorialHelper::VerifyPassword (QString username, QString password)
 
 void TutorialHelper::LoginRequestComplete()
 {
-    qDebug() << "The output is: " << authReply->readAll ();
+    QString responseString(authReply->readAll ());
+    if(responseString == "true")
+        emit PasswordVerifySuccess ();
+    else
+        emit PasswordVerifyFail ();
+
 }
 
 
