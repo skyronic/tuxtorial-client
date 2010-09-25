@@ -159,6 +159,7 @@ void EditorWindow::ScreenshotTick ()
         }
 
         stepActive = false;
+        this->show ();
     }
     else
     {
@@ -173,6 +174,7 @@ void EditorWindow::StartScreenshotCountdown ()
 {
     if(!stepActive)
     {
+        this->hide ();
         screenshotTimeRemaining = 5;
         screenshotTimer->start (1000);
     }
@@ -180,9 +182,11 @@ void EditorWindow::StartScreenshotCountdown ()
 
 void EditorWindow::CancelScreenshotCountdown()
 {
+    qDebug() << "Cancelling the screnshot countdown";
     screenshotTimer->stop ();
     stepActive = false;
     StepFinishFail ();
+    this->show ();
 }
 
 void EditorWindow::ShowTerminalDialog ()
