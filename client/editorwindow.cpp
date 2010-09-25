@@ -363,7 +363,7 @@ void EditorWindow::UploadFinished(QNetworkReply *reply)
     qDebug() << "The response from the server is: " << response;
 }
 
-void EditorWindow::on_uploadButton_clicked()
+void EditorWindow::ProcessAndStartUpload()
 {
     tutorialHelper->SerializeToFile ();
     tutorialHelper->CreateArchive ();
@@ -371,4 +371,9 @@ void EditorWindow::on_uploadButton_clicked()
 
     connect(tutorialHelper->reply, SIGNAL(uploadProgress(qint64,qint64)), this, SLOT(UpdateNetworkCount(qint64,qint64)));
     connect(tutorialHelper->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(UploadFinished(QNetworkReply*)));
+}
+
+void EditorWindow::on_uploadButton_clicked()
+{
+    tutorialHelper->VerifyPassword (ui->usernameLineEdit->text (), ui->passwordLineEdit->text ());
 }

@@ -20,7 +20,6 @@ function tt()
     else
         $progname "$@" | tee -a $stepfile
     fi
-    echo "[OUTPUT]$commandId" >> $stepfile
     echo "[CMD]$commandId" >> $stepfile
     echo $progname >> $stepfile
     while [ -n "$1" ]; do
@@ -38,7 +37,6 @@ function ttq()
     oldPwd=$PWD
 
     bash -c "$@" | tee -a $stepfile
-    echo "[OUTPUT]$commandId" >> $stepfile
     echo "[CMD]$commandId" >> $stepfile
     echo $@ >> $stepfile
     echo "[ENV]$commandId" >> $stepfile

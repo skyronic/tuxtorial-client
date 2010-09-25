@@ -15,10 +15,13 @@
 #include <QByteArray>
 #include <QBuffer>
 #include <QApplication>
+#include <QCryptographicHash>
+#include <QNetworkProxy>
 
 TutorialHelper::TutorialHelper(QObject *parent) :
     QObject(parent)
 {
+    authReply = NULL;
 }
 
 void TutorialHelper::setParams (QDir *dir, QList<Step> *stps)
@@ -95,6 +98,32 @@ void TutorialHelper::CreateArchive ()
     archivePath = rootDir->absoluteFilePath (dirName + ".zip");
 }
 
+void TutorialHelper::VerifyPassword (QString username, QString password)
+{
+    // First, get an MD5 hash from the password
+    QByteArray hashedPass = QCryptographicHash::hash (password.toAscii (), QCryptographicHash::Md5);
+    QString hashedString = QString(hashedPass.toHex ().constData ());
+
+    QNetworkAccessManager *manager = new QNetworkAccessManager();
+    QNetworkRequest request;
+    QUrl endpoint;
+    endpoint.setUrl ("http://localhost:8080/User/VerifyLogin");
+    endpoint.addQueryItem ("username", username);
+    endpoint.addQueryItem ("password", hashedString);
+
+    qDebug() << "Making request to: " << endpoint;
+
+    request.setUrl (endpoint);
+    authReply = manager->get (request);
+
+    connect (authReply, SIGNAL(finished()), this, SLOT(LoginRequestComplete()));
+}
+
+void TutorialHelper::LoginRequestComplete()
+{
+    qDebug() << "The output is: " << authReply->readAll ();
+}
+
 
 void TutorialHelper::StartUpload ()
 {
@@ -115,7 +144,7 @@ void TutorialHelper::StartUpload ()
         dataToSend.append(file.readAll());
         dataToSend.append(crlf + "--" + bound + "--" + crlf);
 
-        QUrl url("http://localhost:8080/Story/UploadStory2");
+        QUrl url("http://localhost:8000/upload");
         QNetworkRequest req(url);
         req.setHeader(QNetworkRequest::ContentTypeHeader, tr("multipart/form-data; boundary=") + bound);
         file.close();

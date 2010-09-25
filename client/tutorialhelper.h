@@ -20,17 +20,22 @@ public:
     void CreateArchive ();
     void CleanUp ();
     void StartUpload();
+    void VerifyPassword (QString username, QString password);
 
     QNetworkAccessManager *manager;
     QNetworkReply *reply;
+
+    QNetworkReply *authReply;
 
 private:
     QDir *rootDir;
     QList<Step> *steps;
     QString archivePath;
 signals:
-
+    void PasswordVerifySuccess ();
+    void PasswordVerifyFail ();
 public slots:
+    void LoginRequestComplete();
 
 };
 

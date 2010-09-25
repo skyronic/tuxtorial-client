@@ -58,6 +58,7 @@ private:
     TextDialog *textDialog;
 
     void RefreshStepList();
+    void ProcessAndStartUpload();
 
 
 public slots:
