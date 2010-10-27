@@ -40,6 +40,7 @@ private:
     int currentStep;
 
     TutorialHelper *tutorialHelper;
+    bool showWindowAfterScrot;
 
 
 

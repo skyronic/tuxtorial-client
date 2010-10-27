@@ -52,6 +52,10 @@
           <property name="text">
            <string>Discard step.</string>
           </property>
+          <property name="icon">
+           <iconset resource="icons.qrc">
+            <normaloff>:/icons/icons/48px-Edit-delete.svg.png</normaloff>:/icons/icons/48px-Edit-delete.svg.png</iconset>
+          </property>
           <property name="description">
            <string>Terminal setup will be preserved.</string>
           </property>
@@ -97,6 +101,10 @@ p, li { white-space: pre-wrap; }
           <property name="text">
            <string>Finish Step</string>
           </property>
+          <property name="icon">
+           <iconset resource="icons.qrc">
+            <normaloff>:/icons/icons/48px-Dialog-apply.svg.png</normaloff>:/icons/icons/48px-Dialog-apply.svg.png</iconset>
+          </property>
           <property name="description">
            <string>Terminal setup will be preserved.</string>
           </property>
@@ -119,6 +127,8 @@ p, li { white-space: pre-wrap; }
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

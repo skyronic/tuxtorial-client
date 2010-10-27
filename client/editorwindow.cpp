@@ -15,6 +15,7 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QtNetwork/QNetworkReply>
+#include <QDirIterator>
 
 #include "terminaldialog.h"
 #include "textdialog.h"
@@ -28,6 +29,7 @@ EditorWindow::EditorWindow(QWidget *parent) :
     ui(new Ui::EditorWindow)
 {
 
+    this->setWindowTitle ("Tuxtorial Capture Tool");
     // Initialize properties
     currentStep = 0;
     stepActive = 0;
@@ -87,9 +89,11 @@ EditorWindow::EditorWindow(QWidget *parent) :
     connect(ui->actionCapture_Screenshot, SIGNAL(triggered()), this, SLOT(StartScreenshotCountdown()));
     connect(systray, SIGNAL(messageClicked()), this, SLOT(CancelScreenshotCountdown()));
     connect(screenshotTimer, SIGNAL(timeout()), this, SLOT(ScreenshotTick()));
+    connect(ui->screenShotButton, SIGNAL(clicked()), this, SLOT(StartScreenshotCountdown()));
 
     // terminal widget signals
     connect(ui->actionCapture_Commands, SIGNAL(triggered()), this, SLOT(ShowTerminalDialog()));
+    connect(ui->commandButton, SIGNAL(clicked()), this, SLOT(ShowTerminalDialog()));
     connect(terminalDialog, SIGNAL(StepFinishSuccess()), this, SLOT(StepFinishSuccess()));
     connect(terminalDialog, SIGNAL(StepFinishFail()), this, SLOT(StepFinishFail()));
     connect(terminalDialog, SIGNAL(StepFinishNoRelease()), this, SLOT(StepFinishNoRelease()));
@@ -97,11 +101,15 @@ EditorWindow::EditorWindow(QWidget *parent) :
 
     // text widget signals
     connect(ui->actionCapture_Text, SIGNAL(triggered()), this, SLOT(ShowTextDialog()));
+    connect(ui->textButton, SIGNAL(clicked()), this, SLOT(ShowTextDialog()));
     connect(textDialog, SIGNAL(StepFinishSuccess()), this, SLOT(StepFinishSuccess()));
     connect(textDialog, SIGNAL(StepFinishFail()), this, SLOT(StepFinishFail()));
     connect(textDialog, SIGNAL(StepFinishNoRelease()), this, SLOT(StepFinishNoRelease()));
     connect(textDialog, SIGNAL(SetStepTextContent(QString,QString)), this, SLOT(SetStepTextContent(QString,QString)));
+
+    this->showWindowAfterScrot = false;
 }
+
 
 EditorWindow::~EditorWindow()
 {
@@ -159,7 +167,11 @@ void EditorWindow::ScreenshotTick ()
         }
 
         stepActive = false;
-        this->show ();
+        if(this->showWindowAfterScrot)
+        {
+            this->show ();
+            this->showWindowAfterScrot = false;
+        }
     }
     else
     {
@@ -174,10 +186,37 @@ void EditorWindow::StartScreenshotCountdown ()
 {
     if(!stepActive)
     {
+        if(this->isVisible ())
+            this->showWindowAfterScrot = true;
         this->hide ();
         screenshotTimeRemaining = 5;
         screenshotTimer->start (1000);
     }
+}
+
+bool RemoveDirectory(QDir &aDir)
+{
+    qDebug() << "Now Deleting " << aDir;
+    QDirIterator iterator(aDir.absolutePath (), QDirIterator::NoIteratorFlags);
+    while(iterator.hasNext ())
+    {
+        iterator.next ();
+        qDebug() << "Iterating over - " << iterator.filePath ();
+        if(iterator.fileInfo ().isFile ())
+        {
+            qDebug () << "Deleting File";
+            QFile::remove (iterator.filePath ());
+        }
+        if (iterator.fileInfo ().isDir () && iterator.fileName () != "." && iterator.fileName () != "..")
+        {
+            QDir rDel(iterator.filePath ());
+            RemoveDirectory(rDel);
+        }
+    }
+    // Delete the root director
+    QString dirName = aDir.dirName ();
+    aDir.cdUp ();
+    aDir.rmdir (dirName);
 }
 
 void EditorWindow::CancelScreenshotCountdown()
@@ -186,7 +225,11 @@ void EditorWindow::CancelScreenshotCountdown()
     screenshotTimer->stop ();
     stepActive = false;
     StepFinishFail ();
-    this->show ();
+    if(this->showWindowAfterScrot)
+    {
+        this->show ();
+        this->showWindowAfterScrot = false;
+    }
 }
 
 void EditorWindow::ShowTerminalDialog ()
@@ -270,9 +313,7 @@ void EditorWindow::SetStepConsoleContent (QString content)
 void EditorWindow::CleanUp ()
 {
     int x = 0;
-    QString dirname = rootDir.dirName ();
-    rootDir.cdUp ();
-    rootDir.rmdir (dirname);
+    RemoveDirectory (rootDir);
     qDebug() << "Removed the temporary files.";
     QApplication::quit ();
 }
@@ -380,6 +421,7 @@ void EditorWindow::PasswordVerifyFail ()
 
 void EditorWindow::PasswordVerifySuccess ()
 {
+    qDebug () << "Password verified successfully";
     ProcessAndStartUpload ();
 }
 
@@ -408,7 +450,7 @@ void EditorWindow::NetworkError (QNetworkReply::NetworkError error)
     msg.setIcon (QMessageBox::Critical);
     msg.exec ();
 
-    ui->uploadButton->setEnabled (true);
+    ui->uploadButton->setEnabled (true);    
 }
 
 void EditorWindow::on_uploadButton_clicked()

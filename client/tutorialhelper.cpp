@@ -108,7 +108,7 @@ void TutorialHelper::VerifyPassword (QString username, QString password)
     QNetworkAccessManager *manager = new QNetworkAccessManager();
     QNetworkRequest request;
     QUrl endpoint;
-    endpoint.setUrl ("http://localhost:8080/User/VerifyLogin");
+    endpoint.setUrl ("http://localhost/User/VerifyLogin");
     endpoint.addQueryItem ("username", username);
     endpoint.addQueryItem ("password", hashedString);
 
@@ -144,7 +144,7 @@ void TutorialHelper::StartUpload ()
         crlf = 0x0d;
         crlf += 0x0a;
         data = "--" + bound + crlf + "Content-Disposition: form-data; name=\"file\"; ";
-        data += "filename=\"uploadfile.zip\"";
+        data += "filename=\"" + rootDir->dirName () + ".zip" + "\"";
         data += crlf + "Content-Type: application/octet-stream" + crlf + crlf;
         dataToSend.insert(0,data);
         dataToSend.append(file.readAll());

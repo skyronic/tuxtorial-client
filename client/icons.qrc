@@ -1,6 +1,14 @@
 <RCC>
     <qresource prefix="/icons">
         <file>icons/helpicon.png</file>
+        <file>icons/48px-Accessories-text-editor.svg.png</file>
+        <file>icons/48px-Bookmark-new.svg.png</file>
+        <file>icons/48px-Camera-photo.svg.png</file>
+        <file>icons/48px-Dialog-apply.svg.png</file>
+        <file>icons/48px-Edit-delete.svg.png</file>
+        <file>icons/48px-Go-up.svg.png</file>
+        <file>icons/48px-Image_upload-tango.svg.png</file>
+        <file>icons/48px-Utilities-terminal.svg.png</file>
     </qresource>
     <qresource prefix="/static">
         <file>ttcommand.sh</file>

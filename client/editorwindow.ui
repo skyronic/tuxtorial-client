@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>797</width>
-    <height>501</height>
+    <width>817</width>
+    <height>550</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Tuxtorial Capture Tool</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="horizontalLayoutWidget">
@@ -31,8 +31,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>778</width>
-      <height>481</height>
+      <width>804</width>
+      <height>531</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1">
@@ -91,7 +91,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,1">
+      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0,1">
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1,0">
          <item>
@@ -128,8 +128,56 @@
            <property name="text">
             <string>Start</string>
            </property>
+           <property name="icon">
+            <iconset resource="icons.qrc">
+             <normaloff>:/icons/icons/48px-Bookmark-new.svg.png</normaloff>:/icons/icons/48px-Bookmark-new.svg.png</iconset>
+           </property>
            <property name="description">
             <string>This window will be hidden to the tray.</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Add New:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="screenShotButton">
+           <property name="text">
+            <string>Screenshot (Winkey+Shift+S)</string>
+           </property>
+           <property name="icon">
+            <iconset resource="icons.qrc">
+             <normaloff>:/icons/icons/48px-Camera-photo.svg.png</normaloff>:/icons/icons/48px-Camera-photo.svg.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="commandButton">
+           <property name="text">
+            <string>Commands (Winkey+Shift+C)</string>
+           </property>
+           <property name="icon">
+            <iconset resource="icons.qrc">
+             <normaloff>:/icons/icons/48px-Utilities-terminal.svg.png</normaloff>:/icons/icons/48px-Utilities-terminal.svg.png</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="textButton">
+           <property name="text">
+            <string>Text (Winkey+Shift+T)</string>
+           </property>
+           <property name="icon">
+            <iconset resource="icons.qrc">
+             <normaloff>:/icons/icons/48px-Accessories-text-editor.svg.png</normaloff>:/icons/icons/48px-Accessories-text-editor.svg.png</iconset>
            </property>
           </widget>
          </item>
@@ -192,6 +240,10 @@
            <property name="text">
             <string>Upload</string>
            </property>
+           <property name="icon">
+            <iconset resource="icons.qrc">
+             <normaloff>:/icons/icons/48px-Image_upload-tango.svg.png</normaloff>:/icons/icons/48px-Image_upload-tango.svg.png</iconset>
+           </property>
            <property name="description">
             <string>and open online tutorial editor.</string>
            </property>
@@ -223,11 +275,11 @@
           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;table border=&quot;0&quot; style=&quot;-qt-table-type: root; margin-top:4px; margin-bottom:4px; margin-left:4px; margin-right:4px;&quot;&gt;
 &lt;tr&gt;
 &lt;td style=&quot;border: none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Server Response&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Sans'; font-size:8pt;&quot;&gt;Server Response&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="openExternalLinks">
           <bool>true</bool>
