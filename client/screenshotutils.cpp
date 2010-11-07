@@ -17,7 +17,7 @@ bool ScreenshotUtils::TakeAndSaveScreenshot (QDir rootPath, int stepNumber, QStr
     QPixmap screenshotMap;
     qDebug() << "The rootpath is " << rootPath.absolutePath ();
     screenshotMap = QPixmap::grabWindow (QApplication::desktop ()->winId ());
-    QFile scrotFile(rootPath.filePath (QString::number (stepNumber) + tr(".png")));
+    QFile scrotFile(rootPath.filePath (QString::number (stepNumber) + tr(".jpg")));
     if(scrotFile.open (QFile::WriteOnly))
     {
         qDebug() << "Saved screenshot to: " << scrotFile.fileName ();

@@ -154,7 +154,7 @@ void EditorWindow::ScreenshotTick ()
             systray->showMessage (tr("Captured screenshot successfully"), "", QSystemTrayIcon::Information, 1000);
             Step target;
             target.Type = Step::Screenshot;
-            target.ScreenshotFileName = QString::number (currentStep) + ".png";
+            target.ScreenshotFileName = QString::number (currentStep) + ".jpg";
             target.ScreenshotPath =screenshotPath;
             steps.append (target);
 
@@ -466,6 +466,6 @@ void EditorWindow::on_uploadButton_clicked()
 void EditorWindow::on_pushButton_2_clicked()
 {
     // Cancel the upload
-    tutorialHelper->reply->abort ();
+    tutorialHelper->reply->close ();
 
 }
