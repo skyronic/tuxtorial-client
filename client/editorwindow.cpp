@@ -407,8 +407,9 @@ void EditorWindow::UploadFinished(QNetworkReply *reply)
     QString response(reply->readAll ());
     ui->uploadButton->setEnabled (true);
     qDebug() << "The response from the server is: " << response;
+    ui->textBrowser->setHtml (response);
+    reply->close ();
 }
-
 void EditorWindow::PasswordVerifyFail ()
 {
     QMessageBox msg;
@@ -460,4 +461,11 @@ void EditorWindow::on_uploadButton_clicked()
     connect(tutorialHelper, SIGNAL(PasswordVerifyFail()), this, SLOT(PasswordVerifyFail()));
     connect(tutorialHelper, SIGNAL(PasswordVerifySuccess ()), this, SLOT(PasswordVerifySuccess ()));
     connect(tutorialHelper->authReply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(NetworkError(QNetworkReply::NetworkError)));
+}
+
+void EditorWindow::on_pushButton_2_clicked()
+{
+    // Cancel the upload
+    tutorialHelper->reply->abort ();
+
 }

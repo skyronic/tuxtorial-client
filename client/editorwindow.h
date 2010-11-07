@@ -98,6 +98,7 @@ public slots:
 
 
 private slots:
+    void on_pushButton_2_clicked();
     void on_uploadButton_clicked();
     void on_commandLinkButton_clicked();
 };

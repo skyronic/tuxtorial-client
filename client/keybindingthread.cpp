@@ -20,17 +20,18 @@ void KeybindingThread::run ()
     unsigned int TKey = XKeysymToKeycode (dpy, XStringToKeysym ("T"));
     unsigned int CKey = XKeysymToKeycode (dpy, XStringToKeysym ("V"));
 
-    XGrabKey (dpy, SKey, AnyModifier, root, True, GrabModeAsync, GrabModeAsync);
-    XGrabKey (dpy, TKey, AnyModifier, root, True, GrabModeAsync, GrabModeAsync);
-    XGrabKey (dpy, CKey, AnyModifier, root, True, GrabModeAsync, GrabModeAsync);
+    XGrabKey (dpy, SKey, AnyModifier, root, True, GrabModeSync, GrabModeSync);
+    XGrabKey (dpy, TKey, AnyModifier, root, True, GrabModeSync, GrabModeSync);
+    XGrabKey (dpy, CKey, AnyModifier, root, True, GrabModeSync, GrabModeSync);
 
     XSelectInput (dpy, root, KeyPressMask);
     for(;;)
     {
         XNextEvent (dpy, &e);
+        bool passThrough = true;
 
         if(e.type == KeyPress){
-            if(e.xkey.state & ShiftMask && e.xkey.state && Mod4Mask)
+            if(e.xkey.state & ShiftMask && e.xkey.state & Mod4Mask)
             {
                 if(e.xkey.keycode == SKey)
                     emit KeybindingActivated (KeybindingThread::ScreenshotStep);
@@ -38,7 +39,17 @@ void KeybindingThread::run ()
                     emit KeybindingActivated (KeybindingThread::TextStep);
                 else if(e.xkey.keycode == CKey)
                     emit KeybindingActivated (KeybindingThread::ConsoleStep);
+                if(e.xkey.keycode == SKey || e.xkey.keycode == TKey || e.xkey.keycode == CKey)
+                {
+                    passThrough = false;
+                    XAllowEvents (dpy, AsyncKeyboard, e.xkey.time);
+                }
             }
+        }
+        if(passThrough)
+        {
+            XAllowEvents (dpy, ReplayKeyboard, e.xkey.time);
+            XFlush (dpy);
         }
     }
 }

@@ -159,6 +159,7 @@ void TutorialHelper::StartUpload ()
         //connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(SlotRequestFinished(QNetworkReply*)));
         reply = manager->post(req, dataToSend);
         //connect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(SlotSetProgressLevel(qint64, qint64)));
+
 }
 
 void TutorialHelper::UploadTemp ()
