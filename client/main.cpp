@@ -1,3 +1,5 @@
+#define _ENDPOINT_ "http://localhost"
+
 #include <QtGui/QApplication>
 #include "editorwindow.h"
 #include "textdialog.h"
