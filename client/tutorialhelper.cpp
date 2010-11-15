@@ -108,7 +108,7 @@ void TutorialHelper::VerifyPassword (QString username, QString password)
     QNetworkAccessManager *manager = new QNetworkAccessManager();
     QNetworkRequest request;
     QUrl endpoint;
-    endpoint.setUrl ("http://localhost/User/VerifyLogin");
+    endpoint.setUrl ("http://tuxtorial.com/User/VerifyLogin");
     endpoint.addQueryItem ("username", username);
     endpoint.addQueryItem ("password", hashedString);
 
@@ -131,7 +131,7 @@ void TutorialHelper::LoginRequestComplete()
 }
 
 
-void TutorialHelper::StartUpload ()
+void TutorialHelper::StartUpload (QString username, QString password)
 {
         QString bound;
         QString crlf;
@@ -150,7 +150,15 @@ void TutorialHelper::StartUpload ()
         dataToSend.append(file.readAll());
         dataToSend.append(crlf + "--" + bound + "--" + crlf);
 
-        QUrl url("http://localhost:8000/upload");
+        // First, get an MD5 hash from the password
+        QByteArray hashedPass = QCryptographicHash::hash (password.toAscii (), QCryptographicHash::Md5);
+        QString hashedString = QString(hashedPass.toHex ().constData ());
+
+        QUrl url("http://tuxtorial.com:8000/upload");
+        url.addQueryItem ("username", username);
+        url.addQueryItem ("password", hashedString);
+
+        qDebug () << "Making request to " << url;
         QNetworkRequest req(url);
         req.setHeader(QNetworkRequest::ContentTypeHeader, tr("multipart/form-data; boundary=") + bound);
         file.close();

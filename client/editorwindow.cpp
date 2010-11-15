@@ -66,7 +66,10 @@ EditorWindow::EditorWindow(QWidget *parent) :
     screenshotTimer = new QTimer();
 
     systray = new QSystemTrayIcon();
-    systray->setIcon (QIcon(":/icons/helpicon.png"));
+    QIcon icon(":/icons/Image_upload-tango.svg");
+
+    systray->setIcon (icon);
+    systray->setVisible (true);
     systray->setContextMenu (new QMenu());
     systray->contextMenu ()->addAction (ui->actionCapture_Screenshot);
     systray->contextMenu ()->addAction (ui->actionCapture_Text);
@@ -399,7 +402,7 @@ void EditorWindow::UpdateNetworkCount(qint64 complete, qint64 total)
 {
     ui->progressBar->setValue ((complete * 100) / total);
     QString format;
-    ui->progressBar->setFormat (format.sprintf ("%d of %d complete", complete, total));
+    ui->progressBar->setFormat (format.sprintf ("%d % complete", complete * 100 / total));
 }
 
 void EditorWindow::UploadFinished(QNetworkReply *reply)
@@ -428,11 +431,12 @@ void EditorWindow::PasswordVerifySuccess ()
 
 void EditorWindow::ProcessAndStartUpload()
 {
+    qDebug () << "ProcessAndStartUpload ()";
     tutorialHelper->desc = ui->descriptionEdit->toPlainText ();
     tutorialHelper->title = ui->titleEdit->text ();
     tutorialHelper->SerializeToFile ();
     tutorialHelper->CreateArchive ();
-    tutorialHelper->StartUpload ();
+    tutorialHelper->StartUpload (ui->usernameLineEdit->text (), ui->passwordLineEdit->text ());
 
 
     connect(tutorialHelper->reply, SIGNAL(uploadProgress(qint64,qint64)), this, SLOT(UpdateNetworkCount(qint64,qint64)));
@@ -456,6 +460,7 @@ void EditorWindow::NetworkError (QNetworkReply::NetworkError error)
 
 void EditorWindow::on_uploadButton_clicked()
 {
+    qDebug () << "UploadButton clicked";
     ui->uploadButton->setEnabled (false);
     tutorialHelper->VerifyPassword (ui->usernameLineEdit->text (), ui->passwordLineEdit->text ());
     connect(tutorialHelper, SIGNAL(PasswordVerifyFail()), this, SLOT(PasswordVerifyFail()));

@@ -19,7 +19,7 @@ public:
     void SerializeToFile ();
     void CreateArchive ();
     void CleanUp ();
-    void StartUpload();
+    void StartUpload(QString username, QString password);
     void VerifyPassword (QString username, QString password);
 
 

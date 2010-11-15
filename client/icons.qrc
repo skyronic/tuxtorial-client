@@ -9,6 +9,9 @@
         <file>icons/48px-Go-up.svg.png</file>
         <file>icons/48px-Image_upload-tango.svg.png</file>
         <file>icons/48px-Utilities-terminal.svg.png</file>
+        <file>icons/helpicon_small.png</file>
+        <file>icons/mainicon.ico</file>
+        <file>icons/Image_upload-tango.svg</file>
     </qresource>
     <qresource prefix="/static">
         <file>ttcommand.sh</file>

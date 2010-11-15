@@ -24,6 +24,8 @@ void KeybindingThread::run ()
     XGrabKey (dpy, TKey, AnyModifier, root, True, GrabModeSync, GrabModeSync);
     XGrabKey (dpy, CKey, AnyModifier, root, True, GrabModeSync, GrabModeSync);
 
+    qDebug () << "Running keybinder thread";
+
     XSelectInput (dpy, root, KeyPressMask);
     for(;;)
     {
@@ -31,6 +33,7 @@ void KeybindingThread::run ()
         bool passThrough = true;
 
         if(e.type == KeyPress){
+            qDebug () << "Keypress found";
             if(e.xkey.state & ShiftMask && e.xkey.state & Mod4Mask)
             {
                 if(e.xkey.keycode == SKey)

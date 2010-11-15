@@ -18,7 +18,7 @@ function tt()
     elif [ $progname = "eval" ]; then
         builtin eval $@ | tee -a $stepfile
     else
-        $progname "$@" | tee -a $stepfile
+        $progname "$@" 2>&1 | tee -a $stepfile
     fi
     echo "[CMD]$commandId" >> $stepfile
     echo $progname >> $stepfile

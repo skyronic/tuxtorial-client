@@ -1,0 +1,11 @@
+--2010-11-12 15:40:04--  http://upload.wikimedia.org/wikipedia/commons/c/cd/Image_upload-tango.svg
+Resolving upload.wikimedia.org... 208.80.152.3
+Connecting to upload.wikimedia.org|208.80.152.3|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 15322 (15K) [image/svg+xml]
+Saving to: `Image_upload-tango.svg'
+
+     0K .......... ....                                       100% 22.0K=0.7s
+
+2010-11-12 15:40:06 (22.0 KB/s) - `Image_upload-tango.svg' saved [15322/15322]
+
