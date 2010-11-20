@@ -1,0 +1,12 @@
+Makefile*
+*.o
+*~
+.#*
+*#
+*.a
+.moc
+.obj
+tuxtorial
+tuxtorial_d
+ui_*.h
+qrc_icons.cpp
