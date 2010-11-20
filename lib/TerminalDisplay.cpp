@@ -1770,10 +1770,10 @@ void TerminalDisplay::extendSelection( const QPoint& position )
     int i;
     int selClass;
 
-    bool left_not_right = ( here.y() < _iPntSelCorr.y() ||
-	   here.y() == _iPntSelCorr.y() && here.x() < _iPntSelCorr.x() );
-    bool old_left_not_right = ( _pntSelCorr.y() < _iPntSelCorr.y() ||
-	   _pntSelCorr.y() == _iPntSelCorr.y() && _pntSelCorr.x() < _iPntSelCorr.x() );
+    bool left_not_right = ( here.y() < _iPntSelCorr.y() ) ||
+	    ( here.y() == _iPntSelCorr.y() && here.x() < _iPntSelCorr.x() );
+    bool old_left_not_right = ( _pntSelCorr.y() < _iPntSelCorr.y() ) ||
+	    ( _pntSelCorr.y() == _iPntSelCorr.y() && _pntSelCorr.x() < _iPntSelCorr.x() );
     swapping = left_not_right != old_left_not_right;
 
     // Find left (left_not_right ? from here : from start)
@@ -1847,10 +1847,10 @@ void TerminalDisplay::extendSelection( const QPoint& position )
     int i;
     int selClass;
 
-    bool left_not_right = ( here.y() < _iPntSelCorr.y() ||
-	   here.y() == _iPntSelCorr.y() && here.x() < _iPntSelCorr.x() );
-    bool old_left_not_right = ( _pntSelCorr.y() < _iPntSelCorr.y() ||
-	   _pntSelCorr.y() == _iPntSelCorr.y() && _pntSelCorr.x() < _iPntSelCorr.x() );
+    bool left_not_right = ( here.y() < _iPntSelCorr.y() ) ||
+	    ( here.y() == _iPntSelCorr.y() && here.x() < _iPntSelCorr.x() );
+    bool old_left_not_right = ( _pntSelCorr.y() < _iPntSelCorr.y() ) ||
+	    ( _pntSelCorr.y() == _iPntSelCorr.y() && _pntSelCorr.x() < _iPntSelCorr.x() );
     swapping = left_not_right != old_left_not_right;
 
     // Find left (left_not_right ? from here : from start)
@@ -2400,6 +2400,8 @@ QVariant TerminalDisplay::inputMethodQuery( Qt::InputMethodQuery query ) const
             break;
         case Qt::ImCurrentSelection:
                 return QString();
+            break;
+        default:
             break;
     }
 

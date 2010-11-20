@@ -197,7 +197,7 @@ void EditorWindow::StartScreenshotCountdown ()
     }
 }
 
-bool RemoveDirectory(QDir &aDir)
+void RemoveDirectory(QDir &aDir)
 {
     qDebug() << "Now Deleting " << aDir;
     QDirIterator iterator(aDir.absolutePath (), QDirIterator::NoIteratorFlags);
@@ -315,7 +315,6 @@ void EditorWindow::SetStepConsoleContent (QString content)
 
 void EditorWindow::CleanUp ()
 {
-    int x = 0;
     RemoveDirectory (rootDir);
     qDebug() << "Removed the temporary files.";
     QApplication::quit ();
@@ -392,17 +391,15 @@ void EditorWindow::closeEvent (QCloseEvent *ev)
         ev->ignore ();
         this->hide ();
     }
-    else
-    {
+    else if(msgBox.clickedButton() == quitButton)
         CleanUp ();
-    }
 }
 
 void EditorWindow::UpdateNetworkCount(qint64 complete, qint64 total)
 {
     ui->progressBar->setValue ((complete * 100) / total);
     QString format;
-    ui->progressBar->setFormat (format.sprintf ("%d % complete", complete * 100 / total));
+    ui->progressBar->setFormat (format.sprintf ("%d %% complete", (int) (complete * 100 / total)));
 }
 
 void EditorWindow::UploadFinished(QNetworkReply *reply)
