@@ -1,0 +1,8 @@
+REQUIREMENTS
+------------
+A C++ build system, Qmake and Qt4 development libraries.
+
+BUILDING
+--------
+First run `qmake -o Makefile tuxtorial.pro` to generate the
+Makefile. Then run `make` to compile the application.
