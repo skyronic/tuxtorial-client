@@ -291,6 +291,10 @@ void EditorWindow::KeybindingActivated (int type)
         case KeybindingThread::ScreenshotStep:
             StartScreenshotCountdown ();
             break;
+
+        case KeybindingThread::FinishStep:
+            this->ShowWindow(QSystemTrayIcon::DoubleClick);
+            break;
     }
 }
 

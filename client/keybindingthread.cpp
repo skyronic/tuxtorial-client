@@ -19,10 +19,12 @@ void KeybindingThread::run ()
     unsigned int SKey = XKeysymToKeycode (dpy, XStringToKeysym ("S"));
     unsigned int TKey = XKeysymToKeycode (dpy, XStringToKeysym ("T"));
     unsigned int CKey = XKeysymToKeycode (dpy, XStringToKeysym ("V"));
+    unsigned int FKey = XKeysymToKeycode (dpy, XStringToKeysym ("F"));
 
     XGrabKey (dpy, SKey, AnyModifier, root, True, GrabModeSync, GrabModeSync);
     XGrabKey (dpy, TKey, AnyModifier, root, True, GrabModeSync, GrabModeSync);
     XGrabKey (dpy, CKey, AnyModifier, root, True, GrabModeSync, GrabModeSync);
+    XGrabKey (dpy, FKey, AnyModifier, root, True, GrabModeSync, GrabModeSync);
 
     qDebug () << "Running keybinder thread";
 
@@ -42,7 +44,9 @@ void KeybindingThread::run ()
                     emit KeybindingActivated (KeybindingThread::TextStep);
                 else if(e.xkey.keycode == CKey)
                     emit KeybindingActivated (KeybindingThread::ConsoleStep);
-                if(e.xkey.keycode == SKey || e.xkey.keycode == TKey || e.xkey.keycode == CKey)
+                else if (e.xkey.keycode == FKey)
+                    emit KeybindingActivated (KeybindingThread::FinishStep);
+                if(e.xkey.keycode == SKey || e.xkey.keycode == TKey || e.xkey.keycode == CKey || e.xkey.keycode == FKey)
                 {
                     passThrough = false;
                     XAllowEvents (dpy, AsyncKeyboard, e.xkey.time);

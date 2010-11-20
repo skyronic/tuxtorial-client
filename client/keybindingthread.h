@@ -14,6 +14,7 @@ public:
         ScreenshotStep,
         ConsoleStep,
         TextStep,
+        FinishStep,
     };
 signals:
     void KeybindingActivated(int type);
