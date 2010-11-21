@@ -468,6 +468,6 @@ void EditorWindow::on_uploadButton_clicked()
 void EditorWindow::on_pushButton_2_clicked()
 {
     // Cancel the upload
-    tutorialHelper->reply->close ();
-
+    if (tutorialHelper->reply)
+        tutorialHelper->reply->close ();
 }
